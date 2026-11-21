@@ -59,6 +59,39 @@ export class AppointmentRepository {
     }),
     this.prisma.appointment.count({ where }),
   ]);
+  }
+
+  findPending(params: {
+  olderThan: Date;
+  vetId?: string;
+  skip: number;
+  take: number;
+}) {
+  const where: Prisma.AppointmentWhereInput = {
+    status: 'ACTIVE',
+    dateTime: { lte: params.olderThan },
+    ...(params.vetId && { vetId: params.vetId }),
+  };
+
+  return this.prisma.$transaction([
+    this.prisma.appointment.findMany({
+      where,
+      orderBy: { dateTime: 'asc' }, // as mais antigas primeiro
+      skip: params.skip,
+      take: params.take,
+      select: {
+        id: true,
+        dateTime: true,
+        createdAt: true,
+        obs: true,
+        status: true,
+        type: true,
+        pet: { select: { id: true, name: true, species: true } },
+        vet: { select: { id: true, user: { select: { name: true } } } },
+      },
+    }),
+    this.prisma.appointment.count({ where }),
+  ]);
 }
 
   findAll(){

@@ -18,6 +18,7 @@ import { ResponseAppointmentDto } from './dto/response-appointment.dto';
 import { RolesGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorator/role.decorator';
 import { ListAppointmentsQueryDto } from './dto/list-appointment-query.dto';
+import { ListPendingAppointmentsQueryDto } from './dto/list-pending-appointments-query.dto';
 
 @ApiTags('Appointments')
 @ApiBearerAuth()
@@ -55,6 +56,22 @@ export class AppointmentController {
   @Get()
   list(@Query() query: ListAppointmentsQueryDto) {
     return this.appointmentService.list(query);
+  }
+
+  @ApiOperation({
+  summary: 'Listar consultas pendentes de atualização',
+  description:
+    'Retorna consultas com status ACTIVE cujo horário já passou há mais de 2 horas, ou seja, que deveriam ter sido concluídas ou canceladas.',
+  })
+  @ApiOkResponse({
+    description: 'Consultas pendentes retornadas com sucesso',
+    type: [ResponseAppointmentDto],
+  })
+  //@UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN')
+  @Get('pending')
+  listPending(@Query() query: ListPendingAppointmentsQueryDto) {
+    return this.appointmentService.listPending(query);
   }
 
   @Get('all')

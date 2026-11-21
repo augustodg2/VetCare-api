@@ -6,6 +6,7 @@ import { VetsRepository } from '../vets/vets.repository';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { ResponseAppointmentDto } from './dto/response-appointment.dto';
 import { ListAppointmentsQueryDto } from './dto/list-appointment-query.dto';
+import { ListPendingAppointmentsQueryDto } from './dto/list-pending-appointments-query.dto';
 
 @Injectable()
 export class AppointmentService {
@@ -88,6 +89,34 @@ export class AppointmentService {
     total,
   };
   }
+
+  private readonly PENDING_THRESHOLD_MS = 2 * 60 * 60 * 1000; // 2 horas
+
+async listPending(query: ListPendingAppointmentsQueryDto) {
+  const take = 20;
+  const skip = (query.page - 1) * take;
+  const olderThan = new Date(Date.now() - this.PENDING_THRESHOLD_MS);
+
+  const [items, total] = await this.appointmentRepository.findPending({
+    olderThan,
+    vetId: query.vetId,
+    skip,
+    take,
+  });
+
+  return {
+    data: items.map((appointment) => plainToInstance(ResponseAppointmentDto,{
+      ...appointment,
+      vet: {
+        id: appointment.vet.id,
+        name: appointment.vet.user.name,
+      },
+    }, {
+    excludeExtraneousValues: true})),
+    total,
+    pageSize: take,
+  };
+}
 
   async getAll() {
     return await this.appointmentRepository.findAll();
