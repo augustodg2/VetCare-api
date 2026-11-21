@@ -112,7 +112,23 @@ export class AppointmentRepository {
         vet: { select: { id: true, user: { select: { name: true } } } },
       },
     });
-}
+  }
+  updateStatus(id: string, status: AppointmentStatus) {
+    return this.prisma.appointment.update({
+      where: { id },
+      data: { status: status },
+      select: {
+        id: true,
+        dateTime: true,
+        createdAt: true,
+        obs: true,
+        status: true,
+        type: true,
+        pet: { select: { id: true, name: true, species: true } },
+        vet: { select: { id: true, user: { select: { name: true } } } },
+      },
+    });
+  }
 
   findAll(){
     return this.prisma.appointment.findMany();

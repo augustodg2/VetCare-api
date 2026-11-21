@@ -8,6 +8,7 @@ import { ResponseAppointmentDto } from './dto/response-appointment.dto';
 import { ListAppointmentsQueryDto } from './dto/list-appointment-query.dto';
 import { ListPendingAppointmentsQueryDto } from './dto/list-pending-appointments-query.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
+import { AppointmentMinAggregateOutputType } from '../generated/prisma/models';
 
 @Injectable()
 export class AppointmentService {
@@ -120,49 +121,102 @@ private readonly PENDING_THRESHOLD_MS = 2 * 60 * 60 * 1000; // 2 horas
  }
 
 
- async update(id: string, data: UpdateAppointmentDto) {
-  if (data.dateTime === undefined && data.type === undefined && data.obs === undefined) {
-    throw new BadRequestException('Informe ao menos um campo para atualizar');
-  }
-
-  const appointment = await this.appointmentRepository.findById(id);
-  if (!appointment) {
-    throw new NotFoundException('Consulta não encontrada');
-  }
-
-  if (appointment.status !== 'ACTIVE') {
-    throw new BadRequestException('Apenas consultas ativas podem ser alteradas');
-  }
-
-  if (data.dateTime !== undefined) {
-    if (data.dateTime.getTime() <= Date.now()) {
-      throw new BadRequestException('A data da consulta deve ser futura');
+  async update(id: string, data: UpdateAppointmentDto) {
+    if (data.dateTime === undefined && data.type === undefined && data.obs === undefined) {
+      throw new BadRequestException('Informe ao menos um campo para atualizar');
     }
 
-    const conflict = await this.appointmentRepository.findActiveByVetAndDateTime(
-      appointment.vetId,
-      data.dateTime,
-    );
-    if (conflict && conflict.id !== appointment.id) {
-      throw new ConflictException('O veterinário já possui uma consulta nesse horário');
+    const appointment = await this.appointmentRepository.findById(id);
+    if (!appointment) {
+      throw new NotFoundException('Consulta não encontrada');
     }
+
+    if (appointment.status !== 'ACTIVE') {
+      throw new BadRequestException('Apenas consultas ativas podem ser alteradas');
+    }
+
+    if (data.dateTime !== undefined) {
+      if (data.dateTime.getTime() <= Date.now()) {
+        throw new BadRequestException('A data da consulta deve ser futura');
+      }
+
+      const conflict = await this.appointmentRepository.findActiveByVetAndDateTime(
+        appointment.vetId,
+        data.dateTime,
+      );
+      if (conflict && conflict.id !== appointment.id) {
+        throw new ConflictException('O veterinário já possui uma consulta nesse horário');
+      }
+    }
+
+    const updated = await this.appointmentRepository.update(id, {
+      ...(data.dateTime !== undefined && { dateTime: data.dateTime }),
+      ...(data.type !== undefined && { type: data.type }),
+      ...(data.obs !== undefined && { obs: data.obs }),
+    });
+
+    return plainToInstance(ResponseAppointmentDto,{
+        ...updated,
+        vet: {
+          id: updated.vet.id,
+          name: updated.vet.user.name,
+        } 
+    })
   }
 
-  const updated = await this.appointmentRepository.update(id, {
-    ...(data.dateTime !== undefined && { dateTime: data.dateTime }),
-    ...(data.type !== undefined && { type: data.type }),
-    ...(data.obs !== undefined && { obs: data.obs }),
-  });
+  async cancel(id: string) {
+    const appointment = await this.appointmentRepository.findById(id);
+    if (!appointment) {
+      throw new NotFoundException('Consulta não encontrada');
+    }
 
-  return plainToInstance(ResponseAppointmentDto,{
-      ...updated,
-      vet: {
-        id: updated.vet.id,
-        name: updated.vet.user.name,
-      } 
-  })
+    if (appointment.status === 'CANCELLED') {
+      throw new BadRequestException('A consulta já está cancelada');
+    }
+
+    if (appointment.status === 'DONE') {
+      throw new BadRequestException('Uma consulta concluída não pode ser cancelada');
+    }
+
+    const cancelled = await this.appointmentRepository.updateStatus(id, "CANCELLED");
+
+    return plainToInstance(ResponseAppointmentDto,{
+        ...cancelled,
+        vet: {
+          id: cancelled.vet.id,
+          name: cancelled.vet.user.name,
+        } 
+    })
   }
 
+  async complete(id: string) {
+    const appointment = await this.appointmentRepository.findById(id);
+    if (!appointment) {
+      throw new NotFoundException('Consulta não encontrada');
+    }
+
+    if (appointment.status === 'DONE') {
+      throw new BadRequestException('A consulta já está concluída');
+    }
+
+    if (appointment.status === 'CANCELLED') {
+      throw new BadRequestException('Uma consulta cancelada não pode ser concluída');
+    }
+
+    if (appointment.dateTime.getTime() > Date.now()) {
+      throw new BadRequestException('Não é possível concluir uma consulta que ainda não começou');
+    }
+
+    const completed = await this.appointmentRepository.updateStatus(id, 'DONE');
+
+    return plainToInstance(ResponseAppointmentDto,{
+        ...completed,
+        vet: {
+          id: completed.vet.id,
+          name: completed.vet.user.name,
+        } 
+    })
+  }
   async getAll() {
     return await this.appointmentRepository.findAll();
   }

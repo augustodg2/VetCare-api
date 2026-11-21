@@ -31,11 +31,11 @@ export class AppointmentController {
   constructor(private readonly appointmentService: AppointmentService) {}
 
   //create appointment
-  @ApiOperation({ summary: 'Agendar consulta' })
-  @ApiCreatedResponse({ description: 'Consulta criada com sucesso', type: ResponseAppointmentDto })
+  @ApiOperation({ summary: 'Agendar  procedimento' })
+  @ApiCreatedResponse({ description: 'Agendamento criado com sucesso', type: ResponseAppointmentDto })
   @ApiBadRequestResponse({ description: 'Dados inválidos ou data no passado' })
   @ApiNotFoundResponse({ description: 'Pet ou veterinário não encontrado' })
-  @ApiConflictResponse({ description: 'Veterinário já possui consulta nesse horário' })
+  @ApiConflictResponse({ description: 'Veterinário já possui agendamento nesse horário' })
   //@UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles('ADMIN')
   @Post()
@@ -45,7 +45,7 @@ export class AppointmentController {
 
   //Listar appointment
   @ApiOperation({
-  summary: 'Listar consultas por intervalo de data e hora',
+  summary: 'Listar agendamento por intervalo de data e hora',
   description:
     'Retorna as consultas entre `from` (inclusivo) e `to` (exclusivo), com filtros opcionais de veterinário e status.',
   })
@@ -98,8 +98,51 @@ export class AppointmentController {
   @Roles('ADMIN')
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateAppointmentDto) {
-    console.log('ok')
     return this.appointmentService.update(id, dto);
+  }
+
+  //Cancelar
+  @ApiOperation({
+  summary: 'Cancelar consulta',
+  description:
+    'Altera o status de uma consulta ativa para CANCELLED. O registro é mantido no histórico.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'ID da consulta',
+    example: '3f2b8c1e-9a4d-4c7e-8f21-5b6a7d9e0c12',
+  })
+  @ApiOkResponse({ description: 'Consulta cancelada com sucesso', type: ResponseAppointmentDto })
+  @ApiBadRequestResponse({ description: 'Consulta já cancelada ou já concluída' })
+  @ApiNotFoundResponse({ description: 'Consulta não encontrada' })
+  //@UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN')
+  @Patch(':id/cancel')
+  cancel(@Param('id') id: string) {
+    return this.appointmentService.cancel(id);
+  }
+
+  //concluir
+  @ApiOperation({
+  summary: 'Concluir consulta',
+  description:
+    'Altera o status de uma consulta ativa para DONE. Só é possível concluir consultas cujo horário já começou.',
+})
+  @ApiParam({
+    name: 'id',
+    description: 'ID da consulta',
+    example: '3f2b8c1e-9a4d-4c7e-8f21-5b6a7d9e0c12',
+  })
+  @ApiOkResponse({ description: 'Consulta concluída com sucesso', type: ResponseAppointmentDto })
+  @ApiBadRequestResponse({
+    description: 'Consulta já concluída, cancelada ou ainda não iniciada',
+  })
+  @ApiNotFoundResponse({ description: 'Consulta não encontrada' })
+  //@UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN')
+  @Patch(':id/complete')
+  complete(@Param('id') id: string) {
+    return this.appointmentService.complete(id);
   }
 
   @Get('all')
