@@ -7,6 +7,7 @@ import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { ResponseAppointmentDto } from './dto/response-appointment.dto';
 import { ListAppointmentsQueryDto } from './dto/list-appointment-query.dto';
 import { ListPendingAppointmentsQueryDto } from './dto/list-pending-appointments-query.dto';
+import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 
 @Injectable()
 export class AppointmentService {
@@ -46,77 +47,121 @@ export class AppointmentService {
       vet: { connect: { id: vetId } },
     });
 
-  return plainToInstance(
-    ResponseAppointmentDto,
-    {
-      ...appointment,
-      vet: {
-        id: appointment.vet.id,
-        name: appointment.vet.user.name, // acessa o name do usuário
+    return plainToInstance(
+      ResponseAppointmentDto,
+      {
+        ...appointment,
+        vet: {
+          id: appointment.vet.id,
+          name: appointment.vet.user.name, // acessa o name do usuário
+        },
       },
-    },
-    { excludeExtraneousValues: true },
-  );
+      { excludeExtraneousValues: true },
+    );
   }
 
   async list(query: ListAppointmentsQueryDto) {
-  if (query.from >= query.to) {
-    throw new BadRequestException('A data inicial deve ser anterior à data final');
+    if (query.from >= query.to) {
+      throw new BadRequestException('A data inicial deve ser anterior à data final');
+    }
+
+    const maxRangeMs = 31 * 24 * 60 * 60 * 1000; // 31 dias
+    if (query.to.getTime() - query.from.getTime() > maxRangeMs) {
+      throw new BadRequestException('O intervalo máximo permitido é de 31 dias');
+    }
+
+    const [items, total] = await this.appointmentRepository.findByRange({
+      from: query.from,
+      to: query.to,
+      vetId: query.vetId,
+      status: query.status,
+      type: query.type
+    });
+
+    return {
+      data: items.map((appointment) => plainToInstance(ResponseAppointmentDto,{
+        ...appointment,
+        vet: {
+          id: appointment.vet.id,
+          name: appointment.vet.user.name, // acessa o name do usuário
+        },
+      }, {
+      excludeExtraneousValues: true})),
+      total,
+    };
   }
 
-  const maxRangeMs = 31 * 24 * 60 * 60 * 1000; // 31 dias
-  if (query.to.getTime() - query.from.getTime() > maxRangeMs) {
-    throw new BadRequestException('O intervalo máximo permitido é de 31 dias');
+private readonly PENDING_THRESHOLD_MS = 2 * 60 * 60 * 1000; // 2 horas
+
+  async listPending(query: ListPendingAppointmentsQueryDto) {
+    const take = 20;
+    const skip = (query.page - 1) * take;
+    const olderThan = new Date(Date.now() - this.PENDING_THRESHOLD_MS);
+
+    const [items, total] = await this.appointmentRepository.findPending({
+      olderThan,
+      vetId: query.vetId,
+      skip,
+      take,
+    });
+
+    return {
+      data: items.map((appointment) => plainToInstance(ResponseAppointmentDto,{
+        ...appointment,
+        vet: {
+          id: appointment.vet.id,
+          name: appointment.vet.user.name,
+        },
+      }, {
+      excludeExtraneousValues: true})),
+      total,
+      pageSize: take,
+    };
+ }
+
+
+ async update(id: string, data: UpdateAppointmentDto) {
+  if (data.dateTime === undefined && data.type === undefined && data.obs === undefined) {
+    throw new BadRequestException('Informe ao menos um campo para atualizar');
   }
 
-  const [items, total] = await this.appointmentRepository.findByRange({
-    from: query.from,
-    to: query.to,
-    vetId: query.vetId,
-    status: query.status,
-    type: query.type
+  const appointment = await this.appointmentRepository.findById(id);
+  if (!appointment) {
+    throw new NotFoundException('Consulta não encontrada');
+  }
+
+  if (appointment.status !== 'ACTIVE') {
+    throw new BadRequestException('Apenas consultas ativas podem ser alteradas');
+  }
+
+  if (data.dateTime !== undefined) {
+    if (data.dateTime.getTime() <= Date.now()) {
+      throw new BadRequestException('A data da consulta deve ser futura');
+    }
+
+    const conflict = await this.appointmentRepository.findActiveByVetAndDateTime(
+      appointment.vetId,
+      data.dateTime,
+    );
+    if (conflict && conflict.id !== appointment.id) {
+      throw new ConflictException('O veterinário já possui uma consulta nesse horário');
+    }
+  }
+
+  const updated = await this.appointmentRepository.update(id, {
+    ...(data.dateTime !== undefined && { dateTime: data.dateTime }),
+    ...(data.type !== undefined && { type: data.type }),
+    ...(data.obs !== undefined && { obs: data.obs }),
   });
 
-  return {
-    data: items.map((appointment) => plainToInstance(ResponseAppointmentDto,{
-      ...appointment,
+  return plainToInstance(ResponseAppointmentDto,{
+      ...updated,
       vet: {
-        id: appointment.vet.id,
-        name: appointment.vet.user.name, // acessa o name do usuário
-      },
-    }, {
-    excludeExtraneousValues: true})),
-    total,
-  };
+        id: updated.vet.id,
+        name: updated.vet.user.name,
+      } 
+  })
   }
-
-  private readonly PENDING_THRESHOLD_MS = 2 * 60 * 60 * 1000; // 2 horas
-
-async listPending(query: ListPendingAppointmentsQueryDto) {
-  const take = 20;
-  const skip = (query.page - 1) * take;
-  const olderThan = new Date(Date.now() - this.PENDING_THRESHOLD_MS);
-
-  const [items, total] = await this.appointmentRepository.findPending({
-    olderThan,
-    vetId: query.vetId,
-    skip,
-    take,
-  });
-
-  return {
-    data: items.map((appointment) => plainToInstance(ResponseAppointmentDto,{
-      ...appointment,
-      vet: {
-        id: appointment.vet.id,
-        name: appointment.vet.user.name,
-      },
-    }, {
-    excludeExtraneousValues: true})),
-    total,
-    pageSize: take,
-  };
-}
 
   async getAll() {
     return await this.appointmentRepository.findAll();

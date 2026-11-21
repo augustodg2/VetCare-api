@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBadRequestResponse,
@@ -9,6 +9,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -19,6 +20,7 @@ import { RolesGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorator/role.decorator';
 import { ListAppointmentsQueryDto } from './dto/list-appointment-query.dto';
 import { ListPendingAppointmentsQueryDto } from './dto/list-pending-appointments-query.dto';
+import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 
 @ApiTags('Appointments')
 @ApiBearerAuth()
@@ -28,6 +30,7 @@ import { ListPendingAppointmentsQueryDto } from './dto/list-pending-appointments
 export class AppointmentController {
   constructor(private readonly appointmentService: AppointmentService) {}
 
+  //create appointment
   @ApiOperation({ summary: 'Agendar consulta' })
   @ApiCreatedResponse({ description: 'Consulta criada com sucesso', type: ResponseAppointmentDto })
   @ApiBadRequestResponse({ description: 'Dados inválidos ou data no passado' })
@@ -40,7 +43,7 @@ export class AppointmentController {
     return this.appointmentService.create(createAppointmentDto);
   }
 
-
+  //Listar appointment
   @ApiOperation({
   summary: 'Listar consultas por intervalo de data e hora',
   description:
@@ -58,6 +61,8 @@ export class AppointmentController {
     return this.appointmentService.list(query);
   }
 
+
+  //Listar pending appointment
   @ApiOperation({
   summary: 'Listar consultas pendentes de atualização',
   description:
@@ -72,6 +77,29 @@ export class AppointmentController {
   @Get('pending')
   listPending(@Query() query: ListPendingAppointmentsQueryDto) {
     return this.appointmentService.listPending(query);
+  }
+
+  //Atualizar
+  @ApiOperation({
+  summary: 'Atualizar consulta',
+  description:
+    'Atualiza tipo, observações e/ou data e hora de uma consulta ativa. Apenas os campos enviados são alterados.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'ID da consulta',
+    example: '3f2b8c1e-9a4d-4c7e-8f21-5b6a7d9e0c12',
+  })
+  @ApiOkResponse({ description: 'Consulta atualizada com sucesso', type: ResponseAppointmentDto })
+  @ApiBadRequestResponse({ description: 'Dados inválidos, consulta não ativa ou data no passado' })
+  @ApiNotFoundResponse({ description: 'Consulta não encontrada' })
+  @ApiConflictResponse({ description: 'Veterinário já possui consulta nesse horário' })
+  //@UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN')
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() dto: UpdateAppointmentDto) {
+    console.log('ok')
+    return this.appointmentService.update(id, dto);
   }
 
   @Get('all')

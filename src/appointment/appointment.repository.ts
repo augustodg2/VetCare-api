@@ -21,12 +21,15 @@ export class AppointmentRepository {
     });
   }
 
-  // Verifica se o vet já tem consulta ativa nesse horário
   findActiveByVetAndDateTime(vetId: string, dateTime: Date) {
     return this.prisma.appointment.findFirst({
       where: { vetId, dateTime, status: 'ACTIVE' },
     });
   }
+
+  findById(id: string) {
+    return this.prisma.appointment.findUnique({ where: { id } });
+    }
 
   findByRange(params: {
   from?: Date;
@@ -34,7 +37,7 @@ export class AppointmentRepository {
   vetId?: string;
   status?: AppointmentStatus;
   type?: ProcedureType
-}) {
+  }) {
   const where: Prisma.AppointmentWhereInput = {
     dateTime: { gte: params.from, lt: params.to },
     ...(params.vetId && { vetId: params.vetId }),
@@ -42,23 +45,23 @@ export class AppointmentRepository {
     ...(params.type && { type: params.type})
   };
 
-  return this.prisma.$transaction([
-    this.prisma.appointment.findMany({
-      where,
-      orderBy: { dateTime: 'asc' },
-      select: {
-        id: true,
-        dateTime: true,
-        createdAt: true,
-        obs: true,
-        status: true,
-        type: true,
-        pet: { select: { id: true, name: true, species: true } },
-        vet: { select: { id: true, user: { select: { name: true } } } },
-      },
-    }),
-    this.prisma.appointment.count({ where }),
-  ]);
+    return this.prisma.$transaction([
+      this.prisma.appointment.findMany({
+        where,
+        orderBy: { dateTime: 'asc' },
+        select: {
+          id: true,
+          dateTime: true,
+          createdAt: true,
+          obs: true,
+          status: true,
+          type: true,
+          pet: { select: { id: true, name: true, species: true } },
+          vet: { select: { id: true, user: { select: { name: true } } } },
+        },
+      }),
+      this.prisma.appointment.count({ where }),
+    ]);
   }
 
   findPending(params: {
@@ -73,12 +76,31 @@ export class AppointmentRepository {
     ...(params.vetId && { vetId: params.vetId }),
   };
 
-  return this.prisma.$transaction([
-    this.prisma.appointment.findMany({
-      where,
-      orderBy: { dateTime: 'asc' }, // as mais antigas primeiro
-      skip: params.skip,
-      take: params.take,
+    return this.prisma.$transaction([
+      this.prisma.appointment.findMany({
+        where,
+        orderBy: { dateTime: 'asc' }, // as mais antigas primeiro
+        skip: params.skip,
+        take: params.take,
+        select: {
+          id: true,
+          dateTime: true,
+          createdAt: true,
+          obs: true,
+          status: true,
+          type: true,
+          pet: { select: { id: true, name: true, species: true } },
+          vet: { select: { id: true, user: { select: { name: true } } } },
+        },
+      }),
+      this.prisma.appointment.count({ where }),
+    ]);
+  }
+
+  update(id: string, data: Prisma.AppointmentUpdateInput) {
+    return this.prisma.appointment.update({
+      where: { id },
+      data,
       select: {
         id: true,
         dateTime: true,
@@ -89,9 +111,7 @@ export class AppointmentRepository {
         pet: { select: { id: true, name: true, species: true } },
         vet: { select: { id: true, user: { select: { name: true } } } },
       },
-    }),
-    this.prisma.appointment.count({ where }),
-  ]);
+    });
 }
 
   findAll(){
