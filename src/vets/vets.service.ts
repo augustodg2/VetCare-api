@@ -1,8 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpCode, Injectable } from '@nestjs/common';
 import { CreateVetDto } from './dto/create-vet.dto';
 import { UpdateVetDto } from './dto/update-vet.dto';
 import { UsersRepository } from './../users/users.repository'
 import { VetsRepository } from './vets.repository';
+import { ListVetsQueryDto } from './dto/listsVetsQuery.dto';
+import { plainToInstance } from 'class-transformer';
+import { ResponseVetsDto } from './dto/response-vets.dto';
 
 @Injectable()
 export class VetsService {
@@ -10,24 +13,36 @@ export class VetsService {
   constructor(private readonly userRepository: UsersRepository, private readonly vetsRepository: VetsRepository){}
 
   async create(data: CreateVetDto) {
-    const user = await this.userRepository.findByEmail(data.userEmail);
+    const user = await this.userRepository.findById(data.userId);
     if(!user){
       throw new BadRequestException('Usuário não existe')
     }
     if(user.role != "VET"){
       throw new BadRequestException("Usuário não pode ser veterinário")
     }
-    console.log('checkpoin1')
+    if (await this.vetsRepository.vetAlreadyExists(data.cpf, data.crmv, data.userId)){
+      throw new BadRequestException("Veterinário já existe")
+    }
     const newData = {
-      name: data.name,
       crmv: data.crmv,
       cpf: data.cpf,
       user: {
         connect: {
           id: user.id,
     },},};
-    console.log('checkpoin')
-    return this.vetsRepository.create(newData);
+
+    const vet = await this.vetsRepository.create(newData)
+    return plainToInstance(ResponseVetsDto, vet, {excludeExtraneousValues: true}) ;
+  }
+  async list({ search, page }: ListVetsQueryDto) {
+    const { data, ...pagination } = await this.vetsRepository.search(search, page);
+
+    return {
+      ...pagination,
+      data: plainToInstance(ResponseVetsDto, data, {
+        excludeExtraneousValues: true,
+      }),
+    };
   }
 
   async findAll() {
@@ -39,7 +54,7 @@ export class VetsService {
     if (!vet){
       throw new BadRequestException('veterinário não existe')
     }
-    return vet;
+    return plainToInstance(ResponseVetsDto, vet, {excludeExtraneousValues: false});
   }
 
   async update(id: string, data: UpdateVetDto) {
@@ -47,8 +62,8 @@ export class VetsService {
     if(!vet){
       throw new BadRequestException('veterinário não existe')
     }
-    if(data.userEmail){
-      const user = await this.userRepository.findByEmail(data.userEmail);
+    if(data.userId){
+      const user = await this.userRepository.findById(data.userId);
       if(!user){
         throw new BadRequestException('Usuário não existe')
       }
@@ -56,14 +71,16 @@ export class VetsService {
         throw new BadRequestException("Usuário não pode ser veterinário")
       }
     }
-    return this.vetsRepository.update(id, data);
+    const newvet = this.vetsRepository.update(id, data)
+    return plainToInstance(ResponseVetsDto, newvet, {excludeExtraneousValues: false});;
   }
 
-  async remove(id: string) {
+  async softDelete(id: string) {
     const vet = await this.vetsRepository.getById(id);
     if(!vet){
       throw new BadRequestException('veterinário não existe')
     }
-    return this.vetsRepository.delete(id)
+    this.vetsRepository.softDelete(id)
+    return 
   }
 }
