@@ -5,6 +5,7 @@ import { PetRepository } from '../pet/pet.repository';
 import { VetsRepository } from '../vets/vets.repository';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { ResponseAppointmentDto } from './dto/response-appointment.dto';
+import { ListAppointmentsQueryDto } from './dto/list-appointment-query.dto';
 
 @Injectable()
 export class AppointmentService {
@@ -55,5 +56,40 @@ export class AppointmentService {
     },
     { excludeExtraneousValues: true },
   );
+  }
+
+  async list(query: ListAppointmentsQueryDto) {
+  if (query.from >= query.to) {
+    throw new BadRequestException('A data inicial deve ser anterior à data final');
+  }
+
+  const maxRangeMs = 31 * 24 * 60 * 60 * 1000; // 31 dias
+  if (query.to.getTime() - query.from.getTime() > maxRangeMs) {
+    throw new BadRequestException('O intervalo máximo permitido é de 31 dias');
+  }
+
+  const [items, total] = await this.appointmentRepository.findByRange({
+    from: query.from,
+    to: query.to,
+    vetId: query.vetId,
+    status: query.status,
+    type: query.type
+  });
+
+  return {
+    data: items.map((appointment) => plainToInstance(ResponseAppointmentDto,{
+      ...appointment,
+      vet: {
+        id: appointment.vet.id,
+        name: appointment.vet.user.name, // acessa o name do usuário
+      },
+    }, {
+    excludeExtraneousValues: true})),
+    total,
+  };
+  }
+
+  async getAll() {
+    return await this.appointmentRepository.findAll();
   }
 }

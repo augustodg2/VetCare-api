@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBadRequestResponse,
@@ -7,6 +7,7 @@ import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -16,6 +17,7 @@ import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { ResponseAppointmentDto } from './dto/response-appointment.dto';
 import { RolesGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorator/role.decorator';
+import { ListAppointmentsQueryDto } from './dto/list-appointment-query.dto';
 
 @ApiTags('Appointments')
 @ApiBearerAuth()
@@ -30,10 +32,33 @@ export class AppointmentController {
   @ApiBadRequestResponse({ description: 'Dados inválidos ou data no passado' })
   @ApiNotFoundResponse({ description: 'Pet ou veterinário não encontrado' })
   @ApiConflictResponse({ description: 'Veterinário já possui consulta nesse horário' })
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  //@UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles('ADMIN')
   @Post()
   create(@Body() createAppointmentDto: CreateAppointmentDto) {
     return this.appointmentService.create(createAppointmentDto);
+  }
+
+
+  @ApiOperation({
+  summary: 'Listar consultas por intervalo de data e hora',
+  description:
+    'Retorna as consultas entre `from` (inclusivo) e `to` (exclusivo), com filtros opcionais de veterinário e status.',
+  })
+  @ApiOkResponse({
+    description: 'Consultas retornadas com sucesso',
+    type: [ResponseAppointmentDto],
+  })
+  @ApiBadRequestResponse({ description: 'Intervalo inválido' })
+  //@UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN')
+  @Get()
+  list(@Query() query: ListAppointmentsQueryDto) {
+    return this.appointmentService.list(query);
+  }
+
+  @Get('all')
+  getAll(){
+    return this.appointmentService.getAll()
   }
 }
