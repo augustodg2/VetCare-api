@@ -213,6 +213,40 @@ export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedFloatNullableFilter<$PrismaModel>
 }
 
+export type EnumProcedureTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.ProcedureType | Prisma.EnumProcedureTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ProcedureType[] | Prisma.ListEnumProcedureTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ProcedureType[] | Prisma.ListEnumProcedureTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumProcedureTypeFilter<$PrismaModel> | $Enums.ProcedureType
+}
+
+export type EnumAppointmentStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.AppointmentStatus | Prisma.EnumAppointmentStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.AppointmentStatus[] | Prisma.ListEnumAppointmentStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AppointmentStatus[] | Prisma.ListEnumAppointmentStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAppointmentStatusFilter<$PrismaModel> | $Enums.AppointmentStatus
+}
+
+export type EnumProcedureTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ProcedureType | Prisma.EnumProcedureTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ProcedureType[] | Prisma.ListEnumProcedureTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ProcedureType[] | Prisma.ListEnumProcedureTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumProcedureTypeWithAggregatesFilter<$PrismaModel> | $Enums.ProcedureType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumProcedureTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumProcedureTypeFilter<$PrismaModel>
+}
+
+export type EnumAppointmentStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.AppointmentStatus | Prisma.EnumAppointmentStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.AppointmentStatus[] | Prisma.ListEnumAppointmentStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AppointmentStatus[] | Prisma.ListEnumAppointmentStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAppointmentStatusWithAggregatesFilter<$PrismaModel> | $Enums.AppointmentStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumAppointmentStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumAppointmentStatusFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -423,6 +457,40 @@ export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedFloatNullableFilter<$PrismaModel>
   _min?: Prisma.NestedFloatNullableFilter<$PrismaModel>
   _max?: Prisma.NestedFloatNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumProcedureTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.ProcedureType | Prisma.EnumProcedureTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ProcedureType[] | Prisma.ListEnumProcedureTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ProcedureType[] | Prisma.ListEnumProcedureTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumProcedureTypeFilter<$PrismaModel> | $Enums.ProcedureType
+}
+
+export type NestedEnumAppointmentStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.AppointmentStatus | Prisma.EnumAppointmentStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.AppointmentStatus[] | Prisma.ListEnumAppointmentStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AppointmentStatus[] | Prisma.ListEnumAppointmentStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAppointmentStatusFilter<$PrismaModel> | $Enums.AppointmentStatus
+}
+
+export type NestedEnumProcedureTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ProcedureType | Prisma.EnumProcedureTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ProcedureType[] | Prisma.ListEnumProcedureTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ProcedureType[] | Prisma.ListEnumProcedureTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumProcedureTypeWithAggregatesFilter<$PrismaModel> | $Enums.ProcedureType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumProcedureTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumProcedureTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumAppointmentStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.AppointmentStatus | Prisma.EnumAppointmentStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.AppointmentStatus[] | Prisma.ListEnumAppointmentStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AppointmentStatus[] | Prisma.ListEnumAppointmentStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAppointmentStatusWithAggregatesFilter<$PrismaModel> | $Enums.AppointmentStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumAppointmentStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumAppointmentStatusFilter<$PrismaModel>
 }
 
 

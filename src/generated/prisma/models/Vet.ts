@@ -191,6 +191,7 @@ export type VetWhereInput = {
   deletedAt?: Prisma.DateTimeNullableFilter<"Vet"> | Date | string | null
   userId?: Prisma.StringFilter<"Vet"> | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  appointments?: Prisma.AppointmentListRelationFilter
 }
 
 export type VetOrderByWithRelationInput = {
@@ -201,6 +202,7 @@ export type VetOrderByWithRelationInput = {
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  appointments?: Prisma.AppointmentOrderByRelationAggregateInput
 }
 
 export type VetWhereUniqueInput = Prisma.AtLeast<{
@@ -214,6 +216,7 @@ export type VetWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Vet"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Vet"> | Date | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  appointments?: Prisma.AppointmentListRelationFilter
 }, "id" | "crmv" | "cpf" | "userId">
 
 export type VetOrderByWithAggregationInput = {
@@ -247,6 +250,7 @@ export type VetCreateInput = {
   createdAt?: Date | string
   deletedAt?: Date | string | null
   user: Prisma.UserCreateNestedOneWithoutVetInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutVetInput
 }
 
 export type VetUncheckedCreateInput = {
@@ -256,6 +260,7 @@ export type VetUncheckedCreateInput = {
   createdAt?: Date | string
   deletedAt?: Date | string | null
   userId: string
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutVetInput
 }
 
 export type VetUpdateInput = {
@@ -265,6 +270,7 @@ export type VetUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutVetNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutVetNestedInput
 }
 
 export type VetUncheckedUpdateInput = {
@@ -274,6 +280,7 @@ export type VetUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutVetNestedInput
 }
 
 export type VetCreateManyInput = {
@@ -334,6 +341,11 @@ export type VetMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
 }
 
+export type VetScalarRelationFilter = {
+  is?: Prisma.VetWhereInput
+  isNot?: Prisma.VetWhereInput
+}
+
 export type VetCreateNestedOneWithoutUserInput = {
   create?: Prisma.XOR<Prisma.VetCreateWithoutUserInput, Prisma.VetUncheckedCreateWithoutUserInput>
   connectOrCreate?: Prisma.VetCreateOrConnectWithoutUserInput
@@ -366,12 +378,27 @@ export type VetUncheckedUpdateOneWithoutUserNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.VetUpdateToOneWithWhereWithoutUserInput, Prisma.VetUpdateWithoutUserInput>, Prisma.VetUncheckedUpdateWithoutUserInput>
 }
 
+export type VetCreateNestedOneWithoutAppointmentsInput = {
+  create?: Prisma.XOR<Prisma.VetCreateWithoutAppointmentsInput, Prisma.VetUncheckedCreateWithoutAppointmentsInput>
+  connectOrCreate?: Prisma.VetCreateOrConnectWithoutAppointmentsInput
+  connect?: Prisma.VetWhereUniqueInput
+}
+
+export type VetUpdateOneRequiredWithoutAppointmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.VetCreateWithoutAppointmentsInput, Prisma.VetUncheckedCreateWithoutAppointmentsInput>
+  connectOrCreate?: Prisma.VetCreateOrConnectWithoutAppointmentsInput
+  upsert?: Prisma.VetUpsertWithoutAppointmentsInput
+  connect?: Prisma.VetWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.VetUpdateToOneWithWhereWithoutAppointmentsInput, Prisma.VetUpdateWithoutAppointmentsInput>, Prisma.VetUncheckedUpdateWithoutAppointmentsInput>
+}
+
 export type VetCreateWithoutUserInput = {
   id?: string
   crmv: string
   cpf: string
   createdAt?: Date | string
   deletedAt?: Date | string | null
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutVetInput
 }
 
 export type VetUncheckedCreateWithoutUserInput = {
@@ -380,6 +407,7 @@ export type VetUncheckedCreateWithoutUserInput = {
   cpf: string
   createdAt?: Date | string
   deletedAt?: Date | string | null
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutVetInput
 }
 
 export type VetCreateOrConnectWithoutUserInput = {
@@ -404,6 +432,7 @@ export type VetUpdateWithoutUserInput = {
   cpf?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  appointments?: Prisma.AppointmentUpdateManyWithoutVetNestedInput
 }
 
 export type VetUncheckedUpdateWithoutUserInput = {
@@ -412,8 +441,90 @@ export type VetUncheckedUpdateWithoutUserInput = {
   cpf?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutVetNestedInput
 }
 
+export type VetCreateWithoutAppointmentsInput = {
+  id?: string
+  crmv: string
+  cpf: string
+  createdAt?: Date | string
+  deletedAt?: Date | string | null
+  user: Prisma.UserCreateNestedOneWithoutVetInput
+}
+
+export type VetUncheckedCreateWithoutAppointmentsInput = {
+  id?: string
+  crmv: string
+  cpf: string
+  createdAt?: Date | string
+  deletedAt?: Date | string | null
+  userId: string
+}
+
+export type VetCreateOrConnectWithoutAppointmentsInput = {
+  where: Prisma.VetWhereUniqueInput
+  create: Prisma.XOR<Prisma.VetCreateWithoutAppointmentsInput, Prisma.VetUncheckedCreateWithoutAppointmentsInput>
+}
+
+export type VetUpsertWithoutAppointmentsInput = {
+  update: Prisma.XOR<Prisma.VetUpdateWithoutAppointmentsInput, Prisma.VetUncheckedUpdateWithoutAppointmentsInput>
+  create: Prisma.XOR<Prisma.VetCreateWithoutAppointmentsInput, Prisma.VetUncheckedCreateWithoutAppointmentsInput>
+  where?: Prisma.VetWhereInput
+}
+
+export type VetUpdateToOneWithWhereWithoutAppointmentsInput = {
+  where?: Prisma.VetWhereInput
+  data: Prisma.XOR<Prisma.VetUpdateWithoutAppointmentsInput, Prisma.VetUncheckedUpdateWithoutAppointmentsInput>
+}
+
+export type VetUpdateWithoutAppointmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  crmv?: Prisma.StringFieldUpdateOperationsInput | string
+  cpf?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  user?: Prisma.UserUpdateOneRequiredWithoutVetNestedInput
+}
+
+export type VetUncheckedUpdateWithoutAppointmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  crmv?: Prisma.StringFieldUpdateOperationsInput | string
+  cpf?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+
+/**
+ * Count Type VetCountOutputType
+ */
+
+export type VetCountOutputType = {
+  appointments: number
+}
+
+export type VetCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  appointments?: boolean | VetCountOutputTypeCountAppointmentsArgs
+}
+
+/**
+ * VetCountOutputType without action
+ */
+export type VetCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the VetCountOutputType
+   */
+  select?: Prisma.VetCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * VetCountOutputType without action
+ */
+export type VetCountOutputTypeCountAppointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AppointmentWhereInput
+}
 
 
 export type VetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -424,6 +535,8 @@ export type VetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   deletedAt?: boolean
   userId?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  appointments?: boolean | Prisma.Vet$appointmentsArgs<ExtArgs>
+  _count?: boolean | Prisma.VetCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["vet"]>
 
 export type VetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -458,6 +571,8 @@ export type VetSelectScalar = {
 export type VetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "crmv" | "cpf" | "createdAt" | "deletedAt" | "userId", ExtArgs["result"]["vet"]>
 export type VetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  appointments?: boolean | Prisma.Vet$appointmentsArgs<ExtArgs>
+  _count?: boolean | Prisma.VetCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type VetIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -470,6 +585,7 @@ export type $VetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   name: "Vet"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
+    appointments: Prisma.$AppointmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -873,6 +989,7 @@ readonly fields: VetFieldRefs;
 export interface Prisma__VetClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  appointments<T extends Prisma.Vet$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vet$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1306,6 +1423,30 @@ export type VetDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Limit how many Vets to delete.
    */
   limit?: number
+}
+
+/**
+ * Vet.appointments
+ */
+export type Vet$appointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Appointment
+   */
+  select?: Prisma.AppointmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Appointment
+   */
+  omit?: Prisma.AppointmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AppointmentInclude<ExtArgs> | null
+  where?: Prisma.AppointmentWhereInput
+  orderBy?: Prisma.AppointmentOrderByWithRelationInput | Prisma.AppointmentOrderByWithRelationInput[]
+  cursor?: Prisma.AppointmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AppointmentScalarFieldEnum | Prisma.AppointmentScalarFieldEnum[]
 }
 
 /**

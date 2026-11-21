@@ -52,6 +52,8 @@ model Vet {
   userId    String    @unique
   user      User      @relation(fields: [userId], references: [id])
 
+  appointments Appointment[]
+
   @@index([deletedAt])
 }
 
@@ -83,5 +85,40 @@ model Pet {
   petOwnerId String
   petOwner   PetOwner  @relation(fields: [petOwnerId], references: [id])
 
+  appointments Appointment[]
+
   @@index([deletedAt])
+}
+
+enum AppointmentStatus {
+  ACTIVE
+  CANCELLED
+  DONE
+}
+
+enum ProcedureType {
+  CONSULTATION
+  RETURN
+  VACCINATION
+  SURGERY
+  EXAM
+}
+
+model Appointment {
+  id        String            @id @default(uuid())
+  type      ProcedureType
+  dateTime  DateTime
+  createdAt DateTime          @default(now())
+  obs       String?
+  status    AppointmentStatus @default(ACTIVE)
+
+  petId String
+  vetId String
+
+  pet Pet @relation(fields: [petId], references: [id])
+  vet Vet @relation(fields: [vetId], references: [id])
+
+  @@index([petId])
+  @@index([vetId])
+  @@index([dateTime])
 }

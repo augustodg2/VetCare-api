@@ -33,3 +33,23 @@ export const UserStatus = {
 } as const
 
 export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
+
+
+export const AppointmentStatus = {
+  ACTIVE: 'ACTIVE',
+  CANCELLED: 'CANCELLED',
+  DONE: 'DONE'
+} as const
+
+export type AppointmentStatus = (typeof AppointmentStatus)[keyof typeof AppointmentStatus]
+
+
+export const ProcedureType = {
+  CONSULTATION: 'CONSULTATION',
+  RETURN: 'RETURN',
+  VACCINATION: 'VACCINATION',
+  SURGERY: 'SURGERY',
+  EXAM: 'EXAM'
+} as const
+
+export type ProcedureType = (typeof ProcedureType)[keyof typeof ProcedureType]

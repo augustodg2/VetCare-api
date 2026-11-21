@@ -9,6 +9,7 @@ import { MailModule } from './mail/mail.module';
 import { ConfigModule } from '@nestjs/config';
 import { PetModule } from './pet/pet.module';
 import { PetOwnerModule } from './pet-owner/pet-owner.module';
+import { AppointmentModule } from './appointment/appointment.module';
 
 
 @Module({
@@ -21,7 +22,8 @@ import { PetOwnerModule } from './pet-owner/pet-owner.module';
     PrismaModule,
     MailModule,
     PetModule,
-    PetOwnerModule
+    PetOwnerModule,
+    AppointmentModule
   ],
   controllers: [AppController],
   providers: [AppService],

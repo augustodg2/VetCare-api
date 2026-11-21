@@ -400,7 +400,8 @@ export const ModelName = {
   User: 'User',
   Vet: 'Vet',
   PetOwner: 'PetOwner',
-  Pet: 'Pet'
+  Pet: 'Pet',
+  Appointment: 'Appointment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -416,7 +417,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "vet" | "petOwner" | "pet"
+    modelProps: "user" | "vet" | "petOwner" | "pet" | "appointment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -716,6 +717,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Appointment: {
+      payload: Prisma.$AppointmentPayload<ExtArgs>
+      fields: Prisma.AppointmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AppointmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AppointmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>
+        }
+        findFirst: {
+          args: Prisma.AppointmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AppointmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>
+        }
+        findMany: {
+          args: Prisma.AppointmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>[]
+        }
+        create: {
+          args: Prisma.AppointmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>
+        }
+        createMany: {
+          args: Prisma.AppointmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AppointmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>[]
+        }
+        delete: {
+          args: Prisma.AppointmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>
+        }
+        update: {
+          args: Prisma.AppointmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.AppointmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AppointmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AppointmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.AppointmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>
+        }
+        aggregate: {
+          args: Prisma.AppointmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAppointment>
+        }
+        groupBy: {
+          args: Prisma.AppointmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AppointmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AppointmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AppointmentCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -811,6 +886,20 @@ export const PetScalarFieldEnum = {
 } as const
 
 export type PetScalarFieldEnum = (typeof PetScalarFieldEnum)[keyof typeof PetScalarFieldEnum]
+
+
+export const AppointmentScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  dateTime: 'dateTime',
+  createdAt: 'createdAt',
+  obs: 'obs',
+  status: 'status',
+  petId: 'petId',
+  vetId: 'vetId'
+} as const
+
+export type AppointmentScalarFieldEnum = (typeof AppointmentScalarFieldEnum)[keyof typeof AppointmentScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -924,6 +1013,34 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ProcedureType'
+ */
+export type EnumProcedureTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProcedureType'>
+    
+
+
+/**
+ * Reference to a field of type 'ProcedureType[]'
+ */
+export type ListEnumProcedureTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProcedureType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'AppointmentStatus'
+ */
+export type EnumAppointmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AppointmentStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'AppointmentStatus[]'
+ */
+export type ListEnumAppointmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AppointmentStatus[]'>
     
 
 
@@ -1095,6 +1212,7 @@ export type GlobalOmitConfig = {
   vet?: Prisma.VetOmit
   petOwner?: Prisma.PetOwnerOmit
   pet?: Prisma.PetOmit
+  appointment?: Prisma.AppointmentOmit
 }
 
 /* Types for Logging */
