@@ -53,7 +53,7 @@ export class UsersController {
     summary: 'Convidar usuário',
     description: 'Envia um convite para o email informado, com o perfil de acesso definido. Restrito a administradores com status ativo.',
   })
-  @ApiCreatedResponse({ description: 'Convite criado com sucesso' })
+  @ApiCreatedResponse({ description: 'Convite criado com sucesso', type: ResponseUserDto })
   @ApiBadRequestResponse({ description: 'Dados inválidos ou email já cadastrado' })
   @ApiForbiddenResponse({ description: 'Acesso restrito a administradores ativos' })
   @UseGuards(AuthGuard('jwt'), RolesGuard, StatusGuard)

@@ -69,7 +69,7 @@ export class UsersService {
       throw new InternalServerErrorException(er);
     }
   
-    return HttpStatus.CREATED
+    return plainToInstance(ResponseUserDto, user, {excludeExtraneousValues: true})
   }
 
   async deactivate(id: string){
