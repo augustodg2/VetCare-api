@@ -7,7 +7,7 @@ A **VetCare API** é o *back-end* da plataforma de gestão de clínicas veterin�
 A solução suporta as principais operações operacionais e clínicas da instituição:
 
 - **Autenticação & Controle de Acesso (RBAC):** autenticação *stateless* com **JWT**, senhas criptografadas via **bcrypt** e controle de permissões por papéis (**ADMIN**, **Veterinário** e **Recepcionista**).
-- **Gestão de Usuários:** manutenção completa de operadores, com suporte à desativação de conta e envio automatizado de credenciais via **Nodemailer**.
+- **Gestão de Usuários:** manutenção completa de operadores, com suporte à desativação de conta e envio automatizado de credenciais via **Resend**.
 - **Gestão de Tutores e Animais:** cadastro unificado (Tutor + Animal na mesma requisição), vínculo posterior de novos animais e preservação de histórico via **soft-delete**.
 - **Agendamentos & Consultas:** controle da agenda médica com validação de conflitos de horário (*double-booking*).
 - **Procedimentos & Prontuários:** registros imutáveis de atendimentos, exames diagnósticos e aplicação de vacinas.
@@ -23,7 +23,7 @@ A solução suporta as principais operações operacionais e clínicas da instit
 | Banco de dados | PostgreSQL |
 | ORM | Prisma |
 | Autenticação | JWT + bcrypt |
-| E-mails | Nodemailer (Ethereal em desenvolvimento) |
+| E-mails | Resend |
 | Infraestrutura local | Docker + Docker Compose |
 
 ---
@@ -112,14 +112,14 @@ Após popular o banco de dados com o `seed.ts`, utilize as credenciais abaixo pa
 | **Usuário** | `admin@vetcare.com` |
 | **Senha** | `ADMIN` |
 
-### 📧 Caixa de E-mails de Teste (Ethereal Email)
+### 📧 Envio de E-mails (Resend)
 
-Para visualizar os e-mails de convite e notificações enviados pelo **Nodemailer**, acesse o [Ethereal Email](https://ethereal.email/messages) com os dados abaixo:
+Os e-mails de convite são enviados via **Resend** (API HTTP). Configure no `.env`:
 
-| Campo | Valor |
+| Variável | Descrição |
 | --- | --- |
-| **Usuário** | `jared.kihn@ethereal.email` |
-| **Senha** | `jwpaj5WaYhapYXaMzA` |
+| `RESEND_API_KEY` | Chave de API criada em [resend.com](https://resend.com/api-keys) |
+| `MAIL_FROM` | Remetente (domínio verificado, ou `onboarding@resend.dev` para testes) |
 
-> ⚠️ Estas credenciais são exclusivas para ambiente de desenvolvimento e testes. Nunca utilize dados reais ou senhas de produção neste arquivo.
+> ⚠️ Sem domínio verificado, o Resend só entrega para o e-mail da própria conta. Nunca versione sua chave de API.
 

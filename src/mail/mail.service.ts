@@ -1,30 +1,22 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import * as nodemailer from "nodemailer";
+import { Resend } from "resend";
 
 @Injectable()
 export class MailService {
   private readonly logger = new Logger(MailService.name);
-  private readonly transporter: nodemailer.Transporter;
+  private readonly resend: Resend;
 
   constructor(private readonly config: ConfigService) {
-    this.transporter = nodemailer.createTransport({
-      host: this.config.get<string>("MAIL_HOST"),
-      port: Number(this.config.get("MAIL_PORT")),
-      secure: false, // porta 587 usa STARTTLS
-      auth: {
-        user: this.config.get<string>("MAIL_USER"),
-        pass: this.config.get<string>("MAIL_PASS"),
-      },
-    });
+    this.resend = new Resend(this.config.get<string>("RESEND_API_KEY"));
   }
 
   async sendConfirmationEmail(to: string, token: string) {
     const link = `https://vetcare-aal.vercel.app/convite/${token}`;
 
     try {
-      await this.transporter.sendMail({
-        from: `"Clínica VetCare" <${this.config.get<string>("MAIL_USER")}>`,
+      const { error } = await this.resend.emails.send({
+        from: `Clínica VetCare <${this.config.get<string>("MAIL_FROM")}>`,
         to,
         subject: "Confirme seu e-mail",
         html: `
@@ -41,6 +33,11 @@ export class MailService {
         `,
         text: `Confirme sua conta acessando: ${link}`,
       });
+
+      
+      if (error) {
+        throw new Error(`${error.name}: ${error.message}`);
+      }
 
       this.logger.log(`E-mail enviado para ${to}`);
     } catch (error) {
