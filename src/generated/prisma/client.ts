@@ -64,3 +64,13 @@ export type Pet = Prisma.PetModel
  * 
  */
 export type Appointment = Prisma.AppointmentModel
+/**
+ * Model Procedure
+ * 
+ */
+export type Procedure = Prisma.ProcedureModel
+/**
+ * Model ProcedureNote
+ * 
+ */
+export type ProcedureNote = Prisma.ProcedureNoteModel

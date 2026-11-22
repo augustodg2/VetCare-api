@@ -10,6 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PetModule } from './pet/pet.module';
 import { PetOwnerModule } from './pet-owner/pet-owner.module';
 import { AppointmentModule } from './appointment/appointment.module';
+import { ProcedureModule } from './procedure/procedure.module';
 
 
 @Module({
@@ -23,7 +24,8 @@ import { AppointmentModule } from './appointment/appointment.module';
     MailModule,
     PetModule,
     PetOwnerModule,
-    AppointmentModule
+    AppointmentModule,
+    ProcedureModule
   ],
   controllers: [AppController],
   providers: [AppService],

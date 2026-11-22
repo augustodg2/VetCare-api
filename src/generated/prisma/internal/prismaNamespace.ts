@@ -401,7 +401,9 @@ export const ModelName = {
   Vet: 'Vet',
   PetOwner: 'PetOwner',
   Pet: 'Pet',
-  Appointment: 'Appointment'
+  Appointment: 'Appointment',
+  Procedure: 'Procedure',
+  ProcedureNote: 'ProcedureNote'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -417,7 +419,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "vet" | "petOwner" | "pet" | "appointment"
+    modelProps: "user" | "vet" | "petOwner" | "pet" | "appointment" | "procedure" | "procedureNote"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -791,6 +793,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Procedure: {
+      payload: Prisma.$ProcedurePayload<ExtArgs>
+      fields: Prisma.ProcedureFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProcedureFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcedurePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProcedureFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcedurePayload>
+        }
+        findFirst: {
+          args: Prisma.ProcedureFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcedurePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProcedureFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcedurePayload>
+        }
+        findMany: {
+          args: Prisma.ProcedureFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcedurePayload>[]
+        }
+        create: {
+          args: Prisma.ProcedureCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcedurePayload>
+        }
+        createMany: {
+          args: Prisma.ProcedureCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProcedureCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcedurePayload>[]
+        }
+        delete: {
+          args: Prisma.ProcedureDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcedurePayload>
+        }
+        update: {
+          args: Prisma.ProcedureUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcedurePayload>
+        }
+        deleteMany: {
+          args: Prisma.ProcedureDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProcedureUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProcedureUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcedurePayload>[]
+        }
+        upsert: {
+          args: Prisma.ProcedureUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcedurePayload>
+        }
+        aggregate: {
+          args: Prisma.ProcedureAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProcedure>
+        }
+        groupBy: {
+          args: Prisma.ProcedureGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProcedureGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProcedureCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProcedureCountAggregateOutputType> | number
+        }
+      }
+    }
+    ProcedureNote: {
+      payload: Prisma.$ProcedureNotePayload<ExtArgs>
+      fields: Prisma.ProcedureNoteFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProcedureNoteFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcedureNotePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProcedureNoteFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcedureNotePayload>
+        }
+        findFirst: {
+          args: Prisma.ProcedureNoteFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcedureNotePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProcedureNoteFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcedureNotePayload>
+        }
+        findMany: {
+          args: Prisma.ProcedureNoteFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcedureNotePayload>[]
+        }
+        create: {
+          args: Prisma.ProcedureNoteCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcedureNotePayload>
+        }
+        createMany: {
+          args: Prisma.ProcedureNoteCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProcedureNoteCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcedureNotePayload>[]
+        }
+        delete: {
+          args: Prisma.ProcedureNoteDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcedureNotePayload>
+        }
+        update: {
+          args: Prisma.ProcedureNoteUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcedureNotePayload>
+        }
+        deleteMany: {
+          args: Prisma.ProcedureNoteDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProcedureNoteUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProcedureNoteUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcedureNotePayload>[]
+        }
+        upsert: {
+          args: Prisma.ProcedureNoteUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcedureNotePayload>
+        }
+        aggregate: {
+          args: Prisma.ProcedureNoteAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProcedureNote>
+        }
+        groupBy: {
+          args: Prisma.ProcedureNoteGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProcedureNoteGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProcedureNoteCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProcedureNoteCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -900,6 +1050,30 @@ export const AppointmentScalarFieldEnum = {
 } as const
 
 export type AppointmentScalarFieldEnum = (typeof AppointmentScalarFieldEnum)[keyof typeof AppointmentScalarFieldEnum]
+
+
+export const ProcedureScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  notes: 'notes',
+  dateTime: 'dateTime',
+  petId: 'petId',
+  vetId: 'vetId',
+  createdAt: 'createdAt'
+} as const
+
+export type ProcedureScalarFieldEnum = (typeof ProcedureScalarFieldEnum)[keyof typeof ProcedureScalarFieldEnum]
+
+
+export const ProcedureNoteScalarFieldEnum = {
+  id: 'id',
+  procedureId: 'procedureId',
+  content: 'content',
+  vetId: 'vetId',
+  createdAt: 'createdAt'
+} as const
+
+export type ProcedureNoteScalarFieldEnum = (typeof ProcedureNoteScalarFieldEnum)[keyof typeof ProcedureNoteScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1213,6 +1387,8 @@ export type GlobalOmitConfig = {
   petOwner?: Prisma.PetOwnerOmit
   pet?: Prisma.PetOmit
   appointment?: Prisma.AppointmentOmit
+  procedure?: Prisma.ProcedureOmit
+  procedureNote?: Prisma.ProcedureNoteOmit
 }
 
 /* Types for Logging */
