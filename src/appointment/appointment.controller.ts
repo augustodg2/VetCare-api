@@ -36,8 +36,8 @@ export class AppointmentController {
   @ApiBadRequestResponse({ description: 'Dados inválidos ou data no passado' })
   @ApiNotFoundResponse({ description: 'Pet ou veterinário não encontrado' })
   @ApiConflictResponse({ description: 'Veterinário já possui agendamento nesse horário' })
-  //@UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN', 'RECEP')
   @Post()
   create(@Body() createAppointmentDto: CreateAppointmentDto) {
     return this.appointmentService.create(createAppointmentDto);
@@ -54,8 +54,8 @@ export class AppointmentController {
     type: [ResponseAppointmentDto],
   })
   @ApiBadRequestResponse({ description: 'Intervalo inválido' })
-  //@UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN', 'RECEP')
   @Get()
   list(@Query() query: ListAppointmentsQueryDto) {
     return this.appointmentService.list(query);
@@ -72,8 +72,8 @@ export class AppointmentController {
     description: 'Consultas pendentes retornadas com sucesso',
     type: [ResponseAppointmentDto],
   })
-  //@UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN', 'RECEP')
   @Get('pending')
   listPending(@Query() query: ListPendingAppointmentsQueryDto) {
     return this.appointmentService.listPending(query);
@@ -94,8 +94,8 @@ export class AppointmentController {
   @ApiBadRequestResponse({ description: 'Dados inválidos, consulta não ativa ou data no passado' })
   @ApiNotFoundResponse({ description: 'Consulta não encontrada' })
   @ApiConflictResponse({ description: 'Veterinário já possui consulta nesse horário' })
-  //@UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN', 'RECEP')
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateAppointmentDto) {
     return this.appointmentService.update(id, dto);
@@ -115,8 +115,8 @@ export class AppointmentController {
   @ApiOkResponse({ description: 'Consulta cancelada com sucesso', type: ResponseAppointmentDto })
   @ApiBadRequestResponse({ description: 'Consulta já cancelada ou já concluída' })
   @ApiNotFoundResponse({ description: 'Consulta não encontrada' })
-  //@UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN', 'RECEP')
   @Patch(':id/cancel')
   cancel(@Param('id') id: string) {
     return this.appointmentService.cancel(id);
@@ -138,8 +138,8 @@ export class AppointmentController {
     description: 'Consulta já concluída, cancelada ou ainda não iniciada',
   })
   @ApiNotFoundResponse({ description: 'Consulta não encontrada' })
-  //@UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN', 'RECEP')
   @Patch(':id/complete')
   complete(@Param('id') id: string) {
     return this.appointmentService.complete(id);
