@@ -55,7 +55,9 @@ export class UsersRepository {
       skip,
       take,
       orderBy: { createdAt: "desc" },
-      select: { id: true, name: true, email: true, role: true, status:true, lastAccessAt:true, inviteSentAt: true, createdAt: true },
+      select: { id: true, name: true, email: true, role: true, status:true, lastAccessAt:true, inviteSentAt: true, createdAt: true,
+        vet: { where: { deletedAt: null }, select: { id: true, cpf: true, crmv: true } },
+      },
     });
   }
 
