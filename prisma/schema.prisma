@@ -52,7 +52,9 @@ model Vet {
   userId    String    @unique
   user      User      @relation(fields: [userId], references: [id])
 
-  appointments Appointment[]
+  appointments   Appointment[]
+  procedureNotes ProcedureNote[]
+  procedures     Procedure[]
 
   @@index([deletedAt])
 }
@@ -86,6 +88,7 @@ model Pet {
   petOwner   PetOwner  @relation(fields: [petOwnerId], references: [id])
 
   appointments Appointment[]
+  procedures   Procedure[]
 
   @@index([deletedAt])
 }
@@ -121,4 +124,36 @@ model Appointment {
   @@index([petId])
   @@index([vetId])
   @@index([dateTime])
+}
+
+model Procedure {
+  id        String        @id @default(uuid())
+  type      ProcedureType
+  notes     String        @db.Text
+  dateTime  DateTime
+  petId     String
+  vetId     String
+  createdAt DateTime      @default(now())
+
+  pet        Pet             @relation(fields: [petId], references: [id])
+  vet        Vet             @relation(fields: [vetId], references: [id])
+  extraNotes ProcedureNote[]
+
+  @@index([type])
+  @@index([petId])
+  @@index([vetId])
+  @@index([dateTime])
+}
+
+model ProcedureNote {
+  id          String   @id @default(uuid())
+  procedureId String
+  content     String   @db.Text
+  vetId       String
+  createdAt   DateTime @default(now())
+
+  procedure Procedure @relation(fields: [procedureId], references: [id], onDelete: Cascade)
+  vet       Vet       @relation(fields: [vetId], references: [id])
+
+  @@index([procedureId, createdAt])
 }
