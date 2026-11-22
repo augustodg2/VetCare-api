@@ -100,7 +100,7 @@ export class UsersController {
   //list
   @ApiOperation({
     summary: 'Listar usuários',
-    description: 'Lista usuários com busca opcional e paginação. Restrito a administradores com status ativo.',
+    description: 'Lista usuários com busca opcional, filtro por status e paginação. Restrito a administradores com status ativo.',
   })
   @ApiOkResponse({ description: 'Lista de usuários', type: [ResponseUserByIdDto] })
   @ApiForbiddenResponse({ description: 'Acesso restrito a administradores ativos' })

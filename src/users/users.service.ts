@@ -87,16 +87,17 @@ export class UsersService {
     return plainToInstance(ResponseUserDto, user, {excludeExtraneousValues:true})
   }
 
-  async findAll({ search, page }: ListUsersDto) {
+  async findAll({ search, status, page }: ListUsersDto) {
     const currentPage = page ?? 1;
 
     const [data, total] = await Promise.all([
       this.usersRepository.findMany({
         search,
+        status,
         skip: (currentPage - 1) * PAGE_SIZE,
         take: PAGE_SIZE,
       }),
-      this.usersRepository.count(search),
+      this.usersRepository.count({ search, status }),
     ]);
 
     const pageSize = PAGE_SIZE

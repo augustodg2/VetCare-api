@@ -1,9 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { Prisma } from "../generated/prisma/client";
+import { UserStatus } from "../generated/prisma/enums";
 
-export interface FindManyParams {
+export interface UserFilters {
   search?: string;
+  status?: UserStatus[];
+}
+
+export interface FindManyParams extends UserFilters {
   skip: number;
   take: number;
 }
@@ -38,20 +43,26 @@ export class UsersRepository {
     return this.prisma.user.delete({where:{id:id}})
   }
 
-  private buildWhere(search?: string): Prisma.UserWhereInput {
-  return search
-    ? {
-        OR: [
-          { name: { contains: search, mode: "insensitive" } },
-          { email: { contains: search, mode: "insensitive" } },
-        ],
-      }
-    : {};
+  private buildWhere({ search, status }: UserFilters): Prisma.UserWhereInput {
+    const where: Prisma.UserWhereInput = {};
+
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: "insensitive" } },
+        { email: { contains: search, mode: "insensitive" } },
+      ];
+    }
+
+    if (status?.length) {
+      where.status = { in: status };
+    }
+
+    return where;
   }
 
-  async findMany({ search, skip, take }: FindManyParams) {
+  async findMany({ skip, take, ...filters }: FindManyParams) {
     return this.prisma.user.findMany({
-      where: this.buildWhere(search),
+      where: this.buildWhere(filters),
       skip,
       take,
       orderBy: { createdAt: "desc" },
@@ -61,7 +72,7 @@ export class UsersRepository {
     });
   }
 
-  async count(search?: string) {
-    return this.prisma.user.count({ where: this.buildWhere(search) });
+  async count(filters: UserFilters) {
+    return this.prisma.user.count({ where: this.buildWhere(filters) });
   }
 }
