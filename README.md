@@ -7,7 +7,7 @@ A **VetCare API** é o *back-end* da plataforma de gestão de clínicas veterin�
 A solução suporta as principais operações operacionais e clínicas da instituição:
 
 - **Autenticação & Controle de Acesso (RBAC):** autenticação *stateless* com **JWT**, senhas criptografadas via **bcrypt** e controle de permissões por papéis (**ADMIN**, **Veterinário** e **Recepcionista**).
-- **Gestão de Usuários:** manutenção completa de operadores, com suporte à desativação de conta e envio automatizado de credenciais via **Resend**.
+- **Gestão de Usuários:** manutenção completa de operadores, com suporte à desativação de conta e envio automatizado de credenciais via **Mailtrap** (sandbox).
 - **Gestão de Tutores e Animais:** cadastro unificado (Tutor + Animal na mesma requisição), vínculo posterior de novos animais e preservação de histórico via **soft-delete**.
 - **Agendamentos & Consultas:** controle da agenda médica com validação de conflitos de horário (*double-booking*).
 - **Procedimentos & Prontuários:** registros imutáveis de atendimentos, exames diagnósticos e aplicação de vacinas.
@@ -23,7 +23,7 @@ A solução suporta as principais operações operacionais e clínicas da instit
 | Banco de dados | PostgreSQL |
 | ORM | Prisma |
 | Autenticação | JWT + bcrypt |
-| E-mails | Resend |
+| E-mails | Mailtrap (sandbox, API HTTPS) |
 | Infraestrutura local | Docker + Docker Compose |
 
 ---
@@ -112,14 +112,15 @@ Após popular o banco de dados com o `seed.ts`, utilize as credenciais abaixo pa
 | **Usuário** | `admin@vetcare.com` |
 | **Senha** | `ADMIN` |
 
-### 📧 Envio de E-mails (Resend)
+### 📧 Envio de E-mails (Mailtrap)
 
-Os e-mails de convite são enviados via **Resend** (API HTTP). Configure no `.env`:
+Os e-mails de convite são enviados pela API HTTPS da **sandbox do Mailtrap** (sem SMTP, então funciona em hosts que bloqueiam portas de e-mail). Configure no `.env` com os dados de [mailtrap.io](https://mailtrap.io):
 
 | Variável | Descrição |
 | --- | --- |
-| `RESEND_API_KEY` | Chave de API criada em [resend.com](https://resend.com/api-keys) |
-| `MAIL_FROM` | Remetente (domínio verificado, ou `onboarding@resend.dev` para testes) |
+| `MAILTRAP_API_TOKEN` | Token de API (Settings › API Tokens) |
+| `MAILTRAP_INBOX_ID` | ID da inbox (número na URL da inbox) |
+| `MAIL_FROM` | Remetente exibido no e-mail |
 
-> ⚠️ Sem domínio verificado, o Resend só entrega para o e-mail da própria conta. Nunca versione sua chave de API.
+> ⚠️ Os e-mails ficam retidos na inbox do Mailtrap e não são entregues aos destinatários. Nunca versione suas credenciais.
 
