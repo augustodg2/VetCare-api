@@ -18,6 +18,7 @@ import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { ResponseAppointmentDto } from './dto/response-appointment.dto';
 import { RolesGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorator/role.decorator';
+import { type AuthenticatedUser, CurrentUser } from '../auth/decorator/current-user.decorator';
 import { ListAppointmentsQueryDto } from './dto/list-appointment-query.dto';
 import { ListPendingAppointmentsQueryDto } from './dto/list-pending-appointments-query.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
@@ -54,11 +55,12 @@ export class AppointmentController {
     type: [ResponseAppointmentDto],
   })
   @ApiBadRequestResponse({ description: 'Intervalo inválido' })
+  @ApiForbiddenResponse({ description: 'Usuário VET sem cadastro de veterinário ativo' })
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN', 'RECEP')
+  @Roles('ADMIN', 'RECEP', 'VET')
   @Get()
-  list(@Query() query: ListAppointmentsQueryDto) {
-    return this.appointmentService.list(query);
+  list(@Query() query: ListAppointmentsQueryDto, @CurrentUser() user: AuthenticatedUser) {
+    return this.appointmentService.list(query, user);
   }
 
 

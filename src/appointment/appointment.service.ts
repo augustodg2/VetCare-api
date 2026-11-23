@@ -1,4 +1,10 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { AppointmentRepository } from './appointment.repository';
 import { PetRepository } from '../pet/pet.repository';
@@ -9,6 +15,7 @@ import { ListAppointmentsQueryDto } from './dto/list-appointment-query.dto';
 import { ListPendingAppointmentsQueryDto } from './dto/list-pending-appointments-query.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { AppointmentMinAggregateOutputType } from '../generated/prisma/models';
+import { AuthenticatedUser } from '../auth/decorator/current-user.decorator';
 
 @Injectable()
 export class AppointmentService {
@@ -61,7 +68,15 @@ export class AppointmentService {
     );
   }
 
-  async list(query: ListAppointmentsQueryDto) {
+  async list(query: ListAppointmentsQueryDto, user?: AuthenticatedUser) {
+    if (user?.role === 'VET') {
+      const vet = await this.vetsRepository.getByUserId(user.id);
+      if (!vet) {
+        throw new ForbiddenException('Cadastro de veterinário não encontrado para este usuário');
+      }
+      query.vetId = vet.id;
+    }
+
     if (query.from >= query.to) {
       throw new BadRequestException('A data inicial deve ser anterior à data final');
     }
