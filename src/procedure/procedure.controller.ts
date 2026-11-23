@@ -15,6 +15,7 @@ import { CreateProcedureDto } from './dto/create-procedure.dto';
 import { ListProceduresQueryDto } from './dto/list-procedure-query.dto';
 import { ListProceduresResponseDto } from './dto/list-procedure-responser.dto';
 import { ExtraNoteDto, ExtraNoteResponseDto } from './dto/extra-note.dto';
+import { ProcedureResponseDto } from './dto/response-procedure.dto';
 
 @ApiTags('Procedures')
 @ApiBearerAuth()
@@ -82,14 +83,14 @@ export class ProcedureController {
   })
   @ApiCreatedResponse({
     description: 'Nota extra criada com sucesso',
-    type: ExtraNoteResponseDto,
+    type: ProcedureResponseDto,
   })
   @ApiBadRequestResponse({ description: 'Dados inválidos' })
   @ApiNotFoundResponse({ description: 'Procedimento não encontrado' })
   addExtraNote(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: ExtraNoteDto,
-  ): Promise<ExtraNoteResponseDto> {
+  ) {
     return this.procedureService.addExtraNote(id, dto);
   } 
 }

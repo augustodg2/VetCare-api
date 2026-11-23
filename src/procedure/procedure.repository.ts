@@ -7,7 +7,7 @@ const procedureInclude = {
   pet: { select: { id: true, name: true, species: true } },
   vet: { select: { id: true, user: { select: { name: true } } } },
   extraNotes: {
-    orderBy: { createdAt: 'desc' }
+    orderBy: { createdAt: 'asc' }
   },
 }satisfies Prisma.ProcedureInclude;
 export type ProcedureWithNotes = Prisma.ProcedureGetPayload<{
@@ -90,17 +90,17 @@ async findMany({ filters, page, limit }: FindProceduresParams) {
 
   async procedureExists(procedureId: string) {
   return this.prisma.procedure.findUnique({
-    where: { id: procedureId },
-    select: { id: true },
+    where: { id: procedureId }
   });
 }
 
-createExtraNote(procedureId: string, content: string) {
-  return this.prisma.procedureNote.create({
-    data: {
-      content,
-      procedure: { connect: { id: procedureId } },
-    },
-  });
-}
+  async addExtraNote(procedureId: string, content: string) {
+    return await this.prisma.procedure.update({
+      where: { id: procedureId },
+      data: {
+        extraNotes: { create: { content } },
+      },
+      include: procedureInclude,
+    });
+  }
 }

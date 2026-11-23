@@ -71,19 +71,19 @@ async list(
   async addExtraNote(
     procedureId: string,
     dto: ExtraNoteDto,
-  ): Promise<ExtraNoteResponseDto> {
+  ) {
     const procedure = await this.repository.procedureExists(procedureId);
 
     if (!procedure) {
       throw new NotFoundException('Procedimento não encontrado');
     }
 
-    const note = await this.repository.createExtraNote(
+    const newProcedure = await this.repository.addExtraNote(
       procedureId,
       dto.content,
     );
 
-    return plainToInstance(ExtraNoteResponseDto, note, {
+    return plainToInstance(ProcedureResponseDto, newProcedure, {
       excludeExtraneousValues: true,
     });
   }
