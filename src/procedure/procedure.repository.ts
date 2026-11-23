@@ -87,4 +87,20 @@ async findMany({ filters, page, limit }: FindProceduresParams) {
       }),
     };
   }
+
+  async procedureExists(procedureId: string) {
+  return this.prisma.procedure.findUnique({
+    where: { id: procedureId },
+    select: { id: true },
+  });
+}
+
+createExtraNote(procedureId: string, content: string) {
+  return this.prisma.procedureNote.create({
+    data: {
+      content,
+      procedure: { connect: { id: procedureId } },
+    },
+  });
+}
 }

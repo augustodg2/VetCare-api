@@ -6,6 +6,7 @@ import { plainToInstance } from 'class-transformer';
 import { ProcedureResponseDto } from './dto/response-procedure.dto';
 import { ListProceduresQueryDto } from './dto/list-procedure-query.dto';
 import { ListProceduresResponseDto } from './dto/list-procedure-responser.dto';
+import { ExtraNoteDto, ExtraNoteResponseDto } from './dto/extra-note.dto';
 
 const PAGESIZE = 10
 @Injectable()
@@ -65,5 +66,25 @@ async list(
       },
       { excludeExtraneousValues: true },
     );
+  }
+
+  async addExtraNote(
+    procedureId: string,
+    dto: ExtraNoteDto,
+  ): Promise<ExtraNoteResponseDto> {
+    const procedure = await this.repository.procedureExists(procedureId);
+
+    if (!procedure) {
+      throw new NotFoundException('Procedimento não encontrado');
+    }
+
+    const note = await this.repository.createExtraNote(
+      procedureId,
+      dto.content,
+    );
+
+    return plainToInstance(ExtraNoteResponseDto, note, {
+      excludeExtraneousValues: true,
+    });
   }
 }

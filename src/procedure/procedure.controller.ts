@@ -1,5 +1,5 @@
 // src/procedure/procedure.controller.ts
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -7,12 +7,14 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { ProcedureService } from './procedure.service';
 import { CreateProcedureDto } from './dto/create-procedure.dto';
 import { ListProceduresQueryDto } from './dto/list-procedure-query.dto';
 import { ListProceduresResponseDto } from './dto/list-procedure-responser.dto';
+import { ExtraNoteDto, ExtraNoteResponseDto } from './dto/extra-note.dto';
 
 @ApiTags('Procedures')
 @ApiBearerAuth()
@@ -64,4 +66,30 @@ export class ProcedureController {
   list(@Query() query: ListProceduresQueryDto) {
     return this.procedureService.list(query);
   }
+
+
+  @Post(':id/notes')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({
+    summary: 'Adiciona uma nota extra ao procedimento',
+    description:
+      'Cria uma nova nota vinculada ao procedimento informado. As notas são retornadas em `extraNotes` da listagem, da mais recente para a mais antiga.',
+  })
+  @ApiParam({
+    name: 'id',
+    format: 'uuid',
+    description: 'ID do procedimento',
+  })
+  @ApiCreatedResponse({
+    description: 'Nota extra criada com sucesso',
+    type: ExtraNoteResponseDto,
+  })
+  @ApiBadRequestResponse({ description: 'Dados inválidos' })
+  @ApiNotFoundResponse({ description: 'Procedimento não encontrado' })
+  addExtraNote(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: ExtraNoteDto,
+  ): Promise<ExtraNoteResponseDto> {
+    return this.procedureService.addExtraNote(id, dto);
+  } 
 }
