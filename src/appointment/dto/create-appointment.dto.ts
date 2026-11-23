@@ -47,11 +47,13 @@ export class CreateAppointmentDto {
   @IsNotEmpty({ message: 'O pet não pode estar vazio' })
   petId: string;
 
-  @ApiProperty({
-    description: 'ID do veterinário',
+  @ApiPropertyOptional({
+    description:
+      'ID do veterinário. Obrigatório para ADMIN e RECEP; ignorado para VET, que agenda sempre para si mesmo',
     example: '7c9e6679-7425-40de-944b-e07fc1f90ae7',
   })
+  @IsOptional()
   @IsString({ message: 'O veterinário deve ser válido' })
   @IsNotEmpty({ message: 'O veterinário não pode estar vazio' })
-  vetId: string;
+  vetId?: string;
 }

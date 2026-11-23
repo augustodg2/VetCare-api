@@ -52,6 +52,10 @@ export class VetsRepository{
     return await this.prisma.vet.findUnique({where:{id: id}});
   }
 
+  async getByUserId(userId: string) {
+    return await this.prisma.vet.findFirst({ where: { userId, deletedAt: null } });
+  }
+
   async vetAlreadyExists(cpf:string, crmv: string, userId: string) {
     if (await this.prisma.vet.findUnique({ where: { userId: userId } }) ||
         await this.prisma.vet.findUnique({where:{cpf: cpf}}) || 

@@ -23,6 +23,10 @@ import { UpdatePetDto } from './dto/update-pet.dto';
 import { ResponsePetDto } from './dto/response-pet.dto'; // ajuste o caminho
 import { PetService } from './pet.service';
 import { StatusGuard } from '../auth/guards/status.guard';
+import { RolesGuard } from '../auth/guards/role.guard';
+import { Roles } from '../auth/decorator/role.decorator';
+import { ListPetAppointmentsQueryDto } from './dto/list-pet-appointments-query.dto';
+import { ResponseAppointmentDto } from '../appointment/dto/response-appointment.dto';
 import { AllowedStatus } from '../auth/decorator/status.decorator';
 
 @ApiTags('Pets')
@@ -82,6 +86,31 @@ export class PetController {
   @ApiNotFoundResponse({ description: 'Pet não encontrado' })
   findOne(@Param('id') id: string) {
     return this.service.findOne(id);
+  }
+
+  @Get(':id/appointments')
+  @UseGuards(RolesGuard)
+  @Roles('ADMIN', 'RECEP')
+  @ApiOperation({
+    summary: 'Histórico de agendamentos do pet',
+    description:
+      'Retorna todos os agendamentos do pet (ativos, concluídos e cancelados), do mais recente para o mais antigo, com paginação.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'ID (UUID) do pet',
+    example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+  })
+  @ApiOkResponse({
+    description: 'Agendamentos do pet',
+    type: [ResponseAppointmentDto],
+  })
+  @ApiNotFoundResponse({ description: 'Pet não encontrado' })
+  listAppointments(
+    @Param('id') id: string,
+    @Query() query: ListPetAppointmentsQueryDto,
+  ) {
+    return this.service.listAppointments(id, query);
   }
 
   @Patch(':id')

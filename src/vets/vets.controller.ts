@@ -59,7 +59,7 @@ export class VetsController {
     isArray: true,
   })
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN')
+  @Roles('ADMIN', 'RECEP')
   @Get()
   lists(@Query() query: ListVetsQueryDto) {
     return this.vetsService.list(query);

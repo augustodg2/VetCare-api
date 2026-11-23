@@ -1,4 +1,10 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { AppointmentRepository } from './appointment.repository';
 import { PetRepository } from '../pet/pet.repository';
@@ -9,6 +15,7 @@ import { ListAppointmentsQueryDto } from './dto/list-appointment-query.dto';
 import { ListPendingAppointmentsQueryDto } from './dto/list-pending-appointments-query.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { AppointmentMinAggregateOutputType } from '../generated/prisma/models';
+import { AuthenticatedUser } from '../auth/decorator/current-user.decorator';
 
 @Injectable()
 export class AppointmentService {
@@ -18,7 +25,20 @@ export class AppointmentService {
     private readonly vetsRepository: VetsRepository,
   ) {}
 
-  async create(data: CreateAppointmentDto) {
+  async create(input: CreateAppointmentDto, user?: AuthenticatedUser) {
+    let resolvedVetId = input.vetId;
+    if (user?.role === 'VET') {
+      const ownVet = await this.vetsRepository.getByUserId(user.id);
+      if (!ownVet) {
+        throw new ForbiddenException('Cadastro de veterinário não encontrado para este usuário');
+      }
+      resolvedVetId = ownVet.id;
+    }
+    if (!resolvedVetId) {
+      throw new BadRequestException('O veterinário deve ser informado');
+    }
+    const data = { ...input, vetId: resolvedVetId };
+
     if (data.dateTime.getTime() <= Date.now()) {
       throw new BadRequestException('A data da consulta deve ser futura');
     }
@@ -61,7 +81,15 @@ export class AppointmentService {
     );
   }
 
-  async list(query: ListAppointmentsQueryDto) {
+  async list(query: ListAppointmentsQueryDto, user?: AuthenticatedUser) {
+    if (user?.role === 'VET') {
+      const vet = await this.vetsRepository.getByUserId(user.id);
+      if (!vet) {
+        throw new ForbiddenException('Cadastro de veterinário não encontrado para este usuário');
+      }
+      query.vetId = vet.id;
+    }
+
     if (query.from >= query.to) {
       throw new BadRequestException('A data inicial deve ser anterior à data final');
     }
@@ -121,7 +149,15 @@ private readonly PENDING_THRESHOLD_MS = 2 * 60 * 60 * 1000; // 2 horas
  }
 
 
-  async update(id: string, data: UpdateAppointmentDto) {
+  private async assertCanManage(appointment: { vetId: string }, user?: AuthenticatedUser) {
+    if (user?.role !== 'VET') return;
+    const ownVet = await this.vetsRepository.getByUserId(user.id);
+    if (!ownVet || ownVet.id !== appointment.vetId) {
+      throw new ForbiddenException('Você só pode alterar as suas próprias consultas');
+    }
+  }
+
+  async update(id: string, data: UpdateAppointmentDto, user?: AuthenticatedUser) {
     if (data.dateTime === undefined && data.type === undefined && data.obs === undefined) {
       throw new BadRequestException('Informe ao menos um campo para atualizar');
     }
@@ -130,6 +166,7 @@ private readonly PENDING_THRESHOLD_MS = 2 * 60 * 60 * 1000; // 2 horas
     if (!appointment) {
       throw new NotFoundException('Consulta não encontrada');
     }
+    await this.assertCanManage(appointment, user);
 
     if (appointment.status !== 'ACTIVE') {
       throw new BadRequestException('Apenas consultas ativas podem ser alteradas');
@@ -164,11 +201,12 @@ private readonly PENDING_THRESHOLD_MS = 2 * 60 * 60 * 1000; // 2 horas
     })
   }
 
-  async cancel(id: string) {
+  async cancel(id: string, user?: AuthenticatedUser) {
     const appointment = await this.appointmentRepository.findById(id);
     if (!appointment) {
       throw new NotFoundException('Consulta não encontrada');
     }
+    await this.assertCanManage(appointment, user);
 
     if (appointment.status === 'CANCELLED') {
       throw new BadRequestException('A consulta já está cancelada');

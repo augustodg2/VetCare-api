@@ -18,6 +18,7 @@ import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { ResponseAppointmentDto } from './dto/response-appointment.dto';
 import { RolesGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorator/role.decorator';
+import { type AuthenticatedUser, CurrentUser } from '../auth/decorator/current-user.decorator';
 import { ListAppointmentsQueryDto } from './dto/list-appointment-query.dto';
 import { ListPendingAppointmentsQueryDto } from './dto/list-pending-appointments-query.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
@@ -36,11 +37,14 @@ export class AppointmentController {
   @ApiBadRequestResponse({ description: 'Dados inválidos ou data no passado' })
   @ApiNotFoundResponse({ description: 'Pet ou veterinário não encontrado' })
   @ApiConflictResponse({ description: 'Veterinário já possui agendamento nesse horário' })
-  //@UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN', 'RECEP', 'VET')
   @Post()
-  create(@Body() createAppointmentDto: CreateAppointmentDto) {
-    return this.appointmentService.create(createAppointmentDto);
+  create(
+    @Body() createAppointmentDto: CreateAppointmentDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.appointmentService.create(createAppointmentDto, user);
   }
 
   //Listar appointment
@@ -54,11 +58,12 @@ export class AppointmentController {
     type: [ResponseAppointmentDto],
   })
   @ApiBadRequestResponse({ description: 'Intervalo inválido' })
-  //@UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN')
+  @ApiForbiddenResponse({ description: 'Usuário VET sem cadastro de veterinário ativo' })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN', 'RECEP', 'VET')
   @Get()
-  list(@Query() query: ListAppointmentsQueryDto) {
-    return this.appointmentService.list(query);
+  list(@Query() query: ListAppointmentsQueryDto, @CurrentUser() user: AuthenticatedUser) {
+    return this.appointmentService.list(query, user);
   }
 
 
@@ -72,8 +77,8 @@ export class AppointmentController {
     description: 'Consultas pendentes retornadas com sucesso',
     type: [ResponseAppointmentDto],
   })
-  //@UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN', 'RECEP')
   @Get('pending')
   listPending(@Query() query: ListPendingAppointmentsQueryDto) {
     return this.appointmentService.listPending(query);
@@ -94,11 +99,15 @@ export class AppointmentController {
   @ApiBadRequestResponse({ description: 'Dados inválidos, consulta não ativa ou data no passado' })
   @ApiNotFoundResponse({ description: 'Consulta não encontrada' })
   @ApiConflictResponse({ description: 'Veterinário já possui consulta nesse horário' })
-  //@UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN', 'RECEP', 'VET')
   @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateAppointmentDto) {
-    return this.appointmentService.update(id, dto);
+  update(
+    @Param('id') id: string,
+    @Body() dto: UpdateAppointmentDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.appointmentService.update(id, dto, user);
   }
 
   //Cancelar
@@ -115,11 +124,11 @@ export class AppointmentController {
   @ApiOkResponse({ description: 'Consulta cancelada com sucesso', type: ResponseAppointmentDto })
   @ApiBadRequestResponse({ description: 'Consulta já cancelada ou já concluída' })
   @ApiNotFoundResponse({ description: 'Consulta não encontrada' })
-  //@UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN', 'RECEP', 'VET')
   @Patch(':id/cancel')
-  cancel(@Param('id') id: string) {
-    return this.appointmentService.cancel(id);
+  cancel(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.appointmentService.cancel(id, user);
   }
 
   //concluir
@@ -138,8 +147,8 @@ export class AppointmentController {
     description: 'Consulta já concluída, cancelada ou ainda não iniciada',
   })
   @ApiNotFoundResponse({ description: 'Consulta não encontrada' })
-  //@UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN', 'RECEP')
   @Patch(':id/complete')
   complete(@Param('id') id: string) {
     return this.appointmentService.complete(id);
