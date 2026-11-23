@@ -64,7 +64,6 @@ export class AppointmentRepository {
     ]);
   }
 
-  // history of one pet, newest first, with every status
   async findByPet(petId: string, page: number, pageSize: number) {
     const where: Prisma.AppointmentWhereInput = { petId };
 
