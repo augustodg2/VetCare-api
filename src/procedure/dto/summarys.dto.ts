@@ -26,7 +26,8 @@ export class VetSummaryDto {
   @Expose()
   id!: string;
 
-  @ApiProperty({ description: 'Nome do veterinário', example: 'Dra. Maria Silva' })
+  @ApiProperty({ example: 'Dra. Ana Souza' })
   @Expose()
+  @Transform(({ obj }) => obj.user?.name)
   name!: string;
 }

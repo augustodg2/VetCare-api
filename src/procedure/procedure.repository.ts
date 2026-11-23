@@ -1,6 +1,6 @@
 // src/procedure/procedure.repository.ts
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '../generated/prisma/client';
+import { Prisma, ProcedureType } from '../generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 
 const procedureInclude = {
@@ -13,6 +13,20 @@ const procedureInclude = {
 export type ProcedureWithNotes = Prisma.ProcedureGetPayload<{
   include: typeof procedureInclude;
 }>;
+
+export interface FindProceduresFilters {
+  type?: ProcedureType;
+  petId?: string;
+  vetId?: string;
+  dateFrom?: Date;
+  dateTo?: Date;
+}
+
+export interface FindProceduresParams {
+  filters: FindProceduresFilters;
+  page: number;
+  limit: number;
+}
 
 @Injectable()
 export class ProcedureRepository {
@@ -39,5 +53,38 @@ export class ProcedureRepository {
       select: { id: true },
     });
     return vet;
+  }
+
+async findMany({ filters, page, limit }: FindProceduresParams) {
+  const where = this.buildWhere(filters);
+
+  const [items, total] = await this.prisma.$transaction([
+    this.prisma.procedure.findMany({
+      where,
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: { dateTime: 'desc' },
+      include: procedureInclude,
+    }),
+    this.prisma.procedure.count({ where }),
+  ]);
+
+  return { items, total };
+}
+
+  private buildWhere(filters: FindProceduresFilters): Prisma.ProcedureWhereInput {
+    const { type, petId, vetId, dateFrom, dateTo } = filters;
+
+    return {
+      ...(type && { type }),
+      ...(petId && { petId }),
+      ...(vetId && { vetId }),
+      ...((dateFrom || dateTo) && {
+        dateTime: {
+          ...(dateFrom && { gte: dateFrom }),
+          ...(dateTo && { lte: dateTo }),
+        },
+      }),
+    };
   }
 }

@@ -1,15 +1,18 @@
 // src/procedure/procedure.controller.ts
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 import { ProcedureService } from './procedure.service';
 import { CreateProcedureDto } from './dto/create-procedure.dto';
+import { ListProceduresQueryDto } from './dto/list-procedure-query.dto';
+import { ListProceduresResponseDto } from './dto/list-procedure-responser.dto';
 
 @ApiTags('Procedures')
 @ApiBearerAuth()
@@ -42,5 +45,23 @@ export class ProcedureController {
   @ApiNotFoundResponse({ description: 'Pet ou veterinário não encontrado' })
   create(@Body() dto: CreateProcedureDto) {
     return this.procedureService.create(dto);
+  }
+
+
+  @Get()
+  @ApiOperation({
+    summary: 'Lista procedimentos',
+    description:
+      'Retorna os procedimentos paginados, ordenados do mais recente para o mais antigo (`dateTime` desc). Todos os filtros são opcionais e combináveis.',
+  })
+  @ApiOkResponse({
+    description: 'Lista paginada de procedimentos',
+    type: ListProceduresResponseDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Parâmetros de query inválidos',
+  })
+  list(@Query() query: ListProceduresQueryDto) {
+    return this.procedureService.list(query);
   }
 }
