@@ -25,7 +25,20 @@ export class AppointmentService {
     private readonly vetsRepository: VetsRepository,
   ) {}
 
-  async create(data: CreateAppointmentDto) {
+  async create(input: CreateAppointmentDto, user?: AuthenticatedUser) {
+    let resolvedVetId = input.vetId;
+    if (user?.role === 'VET') {
+      const ownVet = await this.vetsRepository.getByUserId(user.id);
+      if (!ownVet) {
+        throw new ForbiddenException('Cadastro de veterinário não encontrado para este usuário');
+      }
+      resolvedVetId = ownVet.id;
+    }
+    if (!resolvedVetId) {
+      throw new BadRequestException('O veterinário deve ser informado');
+    }
+    const data = { ...input, vetId: resolvedVetId };
+
     if (data.dateTime.getTime() <= Date.now()) {
       throw new BadRequestException('A data da consulta deve ser futura');
     }

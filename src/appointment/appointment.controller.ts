@@ -38,10 +38,13 @@ export class AppointmentController {
   @ApiNotFoundResponse({ description: 'Pet ou veterinário não encontrado' })
   @ApiConflictResponse({ description: 'Veterinário já possui agendamento nesse horário' })
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN', 'RECEP')
+  @Roles('ADMIN', 'RECEP', 'VET')
   @Post()
-  create(@Body() createAppointmentDto: CreateAppointmentDto) {
-    return this.appointmentService.create(createAppointmentDto);
+  create(
+    @Body() createAppointmentDto: CreateAppointmentDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.appointmentService.create(createAppointmentDto, user);
   }
 
   //Listar appointment
