@@ -64,6 +64,33 @@ export class AppointmentRepository {
     ]);
   }
 
+  // history of one pet, newest first, with every status
+  async findByPet(petId: string, page: number, pageSize: number) {
+    const where: Prisma.AppointmentWhereInput = { petId };
+
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.appointment.findMany({
+        where,
+        orderBy: { dateTime: 'desc' },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        select: {
+          id: true,
+          dateTime: true,
+          createdAt: true,
+          obs: true,
+          status: true,
+          type: true,
+          pet: { select: { id: true, name: true, species: true } },
+          vet: { select: { id: true, user: { select: { name: true } } } },
+        },
+      }),
+      this.prisma.appointment.count({ where }),
+    ]);
+
+    return { data, total, page, pageSize };
+  }
+
   findPending(params: {
   olderThan: Date;
   vetId?: string;
