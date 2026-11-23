@@ -201,6 +201,7 @@ export type ProcedureWhereInput = {
   pet?: Prisma.XOR<Prisma.PetScalarRelationFilter, Prisma.PetWhereInput>
   vet?: Prisma.XOR<Prisma.VetScalarRelationFilter, Prisma.VetWhereInput>
   extraNotes?: Prisma.ProcedureNoteListRelationFilter
+  itemPayments?: Prisma.ItemPaymentListRelationFilter
 }
 
 export type ProcedureOrderByWithRelationInput = {
@@ -214,6 +215,7 @@ export type ProcedureOrderByWithRelationInput = {
   pet?: Prisma.PetOrderByWithRelationInput
   vet?: Prisma.VetOrderByWithRelationInput
   extraNotes?: Prisma.ProcedureNoteOrderByRelationAggregateInput
+  itemPayments?: Prisma.ItemPaymentOrderByRelationAggregateInput
 }
 
 export type ProcedureWhereUniqueInput = Prisma.AtLeast<{
@@ -230,6 +232,7 @@ export type ProcedureWhereUniqueInput = Prisma.AtLeast<{
   pet?: Prisma.XOR<Prisma.PetScalarRelationFilter, Prisma.PetWhereInput>
   vet?: Prisma.XOR<Prisma.VetScalarRelationFilter, Prisma.VetWhereInput>
   extraNotes?: Prisma.ProcedureNoteListRelationFilter
+  itemPayments?: Prisma.ItemPaymentListRelationFilter
 }, "id">
 
 export type ProcedureOrderByWithAggregationInput = {
@@ -267,6 +270,7 @@ export type ProcedureCreateInput = {
   pet: Prisma.PetCreateNestedOneWithoutProceduresInput
   vet: Prisma.VetCreateNestedOneWithoutProceduresInput
   extraNotes?: Prisma.ProcedureNoteCreateNestedManyWithoutProcedureInput
+  itemPayments?: Prisma.ItemPaymentCreateNestedManyWithoutProcedureInput
 }
 
 export type ProcedureUncheckedCreateInput = {
@@ -278,6 +282,7 @@ export type ProcedureUncheckedCreateInput = {
   vetId: string
   createdAt?: Date | string
   extraNotes?: Prisma.ProcedureNoteUncheckedCreateNestedManyWithoutProcedureInput
+  itemPayments?: Prisma.ItemPaymentUncheckedCreateNestedManyWithoutProcedureInput
 }
 
 export type ProcedureUpdateInput = {
@@ -289,6 +294,7 @@ export type ProcedureUpdateInput = {
   pet?: Prisma.PetUpdateOneRequiredWithoutProceduresNestedInput
   vet?: Prisma.VetUpdateOneRequiredWithoutProceduresNestedInput
   extraNotes?: Prisma.ProcedureNoteUpdateManyWithoutProcedureNestedInput
+  itemPayments?: Prisma.ItemPaymentUpdateManyWithoutProcedureNestedInput
 }
 
 export type ProcedureUncheckedUpdateInput = {
@@ -300,6 +306,7 @@ export type ProcedureUncheckedUpdateInput = {
   vetId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   extraNotes?: Prisma.ProcedureNoteUncheckedUpdateManyWithoutProcedureNestedInput
+  itemPayments?: Prisma.ItemPaymentUncheckedUpdateManyWithoutProcedureNestedInput
 }
 
 export type ProcedureCreateManyInput = {
@@ -473,6 +480,20 @@ export type ProcedureUpdateOneRequiredWithoutExtraNotesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProcedureUpdateToOneWithWhereWithoutExtraNotesInput, Prisma.ProcedureUpdateWithoutExtraNotesInput>, Prisma.ProcedureUncheckedUpdateWithoutExtraNotesInput>
 }
 
+export type ProcedureCreateNestedOneWithoutItemPaymentsInput = {
+  create?: Prisma.XOR<Prisma.ProcedureCreateWithoutItemPaymentsInput, Prisma.ProcedureUncheckedCreateWithoutItemPaymentsInput>
+  connectOrCreate?: Prisma.ProcedureCreateOrConnectWithoutItemPaymentsInput
+  connect?: Prisma.ProcedureWhereUniqueInput
+}
+
+export type ProcedureUpdateOneRequiredWithoutItemPaymentsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProcedureCreateWithoutItemPaymentsInput, Prisma.ProcedureUncheckedCreateWithoutItemPaymentsInput>
+  connectOrCreate?: Prisma.ProcedureCreateOrConnectWithoutItemPaymentsInput
+  upsert?: Prisma.ProcedureUpsertWithoutItemPaymentsInput
+  connect?: Prisma.ProcedureWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProcedureUpdateToOneWithWhereWithoutItemPaymentsInput, Prisma.ProcedureUpdateWithoutItemPaymentsInput>, Prisma.ProcedureUncheckedUpdateWithoutItemPaymentsInput>
+}
+
 export type ProcedureCreateWithoutVetInput = {
   id?: string
   type: $Enums.ProcedureType
@@ -481,6 +502,7 @@ export type ProcedureCreateWithoutVetInput = {
   createdAt?: Date | string
   pet: Prisma.PetCreateNestedOneWithoutProceduresInput
   extraNotes?: Prisma.ProcedureNoteCreateNestedManyWithoutProcedureInput
+  itemPayments?: Prisma.ItemPaymentCreateNestedManyWithoutProcedureInput
 }
 
 export type ProcedureUncheckedCreateWithoutVetInput = {
@@ -491,6 +513,7 @@ export type ProcedureUncheckedCreateWithoutVetInput = {
   petId: string
   createdAt?: Date | string
   extraNotes?: Prisma.ProcedureNoteUncheckedCreateNestedManyWithoutProcedureInput
+  itemPayments?: Prisma.ItemPaymentUncheckedCreateNestedManyWithoutProcedureInput
 }
 
 export type ProcedureCreateOrConnectWithoutVetInput = {
@@ -540,6 +563,7 @@ export type ProcedureCreateWithoutPetInput = {
   createdAt?: Date | string
   vet: Prisma.VetCreateNestedOneWithoutProceduresInput
   extraNotes?: Prisma.ProcedureNoteCreateNestedManyWithoutProcedureInput
+  itemPayments?: Prisma.ItemPaymentCreateNestedManyWithoutProcedureInput
 }
 
 export type ProcedureUncheckedCreateWithoutPetInput = {
@@ -550,6 +574,7 @@ export type ProcedureUncheckedCreateWithoutPetInput = {
   vetId: string
   createdAt?: Date | string
   extraNotes?: Prisma.ProcedureNoteUncheckedCreateNestedManyWithoutProcedureInput
+  itemPayments?: Prisma.ItemPaymentUncheckedCreateNestedManyWithoutProcedureInput
 }
 
 export type ProcedureCreateOrConnectWithoutPetInput = {
@@ -586,6 +611,7 @@ export type ProcedureCreateWithoutExtraNotesInput = {
   createdAt?: Date | string
   pet: Prisma.PetCreateNestedOneWithoutProceduresInput
   vet: Prisma.VetCreateNestedOneWithoutProceduresInput
+  itemPayments?: Prisma.ItemPaymentCreateNestedManyWithoutProcedureInput
 }
 
 export type ProcedureUncheckedCreateWithoutExtraNotesInput = {
@@ -596,6 +622,7 @@ export type ProcedureUncheckedCreateWithoutExtraNotesInput = {
   petId: string
   vetId: string
   createdAt?: Date | string
+  itemPayments?: Prisma.ItemPaymentUncheckedCreateNestedManyWithoutProcedureInput
 }
 
 export type ProcedureCreateOrConnectWithoutExtraNotesInput = {
@@ -622,6 +649,7 @@ export type ProcedureUpdateWithoutExtraNotesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pet?: Prisma.PetUpdateOneRequiredWithoutProceduresNestedInput
   vet?: Prisma.VetUpdateOneRequiredWithoutProceduresNestedInput
+  itemPayments?: Prisma.ItemPaymentUpdateManyWithoutProcedureNestedInput
 }
 
 export type ProcedureUncheckedUpdateWithoutExtraNotesInput = {
@@ -632,6 +660,67 @@ export type ProcedureUncheckedUpdateWithoutExtraNotesInput = {
   petId?: Prisma.StringFieldUpdateOperationsInput | string
   vetId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  itemPayments?: Prisma.ItemPaymentUncheckedUpdateManyWithoutProcedureNestedInput
+}
+
+export type ProcedureCreateWithoutItemPaymentsInput = {
+  id?: string
+  type: $Enums.ProcedureType
+  notes: string
+  dateTime: Date | string
+  createdAt?: Date | string
+  pet: Prisma.PetCreateNestedOneWithoutProceduresInput
+  vet: Prisma.VetCreateNestedOneWithoutProceduresInput
+  extraNotes?: Prisma.ProcedureNoteCreateNestedManyWithoutProcedureInput
+}
+
+export type ProcedureUncheckedCreateWithoutItemPaymentsInput = {
+  id?: string
+  type: $Enums.ProcedureType
+  notes: string
+  dateTime: Date | string
+  petId: string
+  vetId: string
+  createdAt?: Date | string
+  extraNotes?: Prisma.ProcedureNoteUncheckedCreateNestedManyWithoutProcedureInput
+}
+
+export type ProcedureCreateOrConnectWithoutItemPaymentsInput = {
+  where: Prisma.ProcedureWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProcedureCreateWithoutItemPaymentsInput, Prisma.ProcedureUncheckedCreateWithoutItemPaymentsInput>
+}
+
+export type ProcedureUpsertWithoutItemPaymentsInput = {
+  update: Prisma.XOR<Prisma.ProcedureUpdateWithoutItemPaymentsInput, Prisma.ProcedureUncheckedUpdateWithoutItemPaymentsInput>
+  create: Prisma.XOR<Prisma.ProcedureCreateWithoutItemPaymentsInput, Prisma.ProcedureUncheckedCreateWithoutItemPaymentsInput>
+  where?: Prisma.ProcedureWhereInput
+}
+
+export type ProcedureUpdateToOneWithWhereWithoutItemPaymentsInput = {
+  where?: Prisma.ProcedureWhereInput
+  data: Prisma.XOR<Prisma.ProcedureUpdateWithoutItemPaymentsInput, Prisma.ProcedureUncheckedUpdateWithoutItemPaymentsInput>
+}
+
+export type ProcedureUpdateWithoutItemPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumProcedureTypeFieldUpdateOperationsInput | $Enums.ProcedureType
+  notes?: Prisma.StringFieldUpdateOperationsInput | string
+  dateTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pet?: Prisma.PetUpdateOneRequiredWithoutProceduresNestedInput
+  vet?: Prisma.VetUpdateOneRequiredWithoutProceduresNestedInput
+  extraNotes?: Prisma.ProcedureNoteUpdateManyWithoutProcedureNestedInput
+}
+
+export type ProcedureUncheckedUpdateWithoutItemPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumProcedureTypeFieldUpdateOperationsInput | $Enums.ProcedureType
+  notes?: Prisma.StringFieldUpdateOperationsInput | string
+  dateTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  petId?: Prisma.StringFieldUpdateOperationsInput | string
+  vetId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  extraNotes?: Prisma.ProcedureNoteUncheckedUpdateManyWithoutProcedureNestedInput
 }
 
 export type ProcedureCreateManyVetInput = {
@@ -651,6 +740,7 @@ export type ProcedureUpdateWithoutVetInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pet?: Prisma.PetUpdateOneRequiredWithoutProceduresNestedInput
   extraNotes?: Prisma.ProcedureNoteUpdateManyWithoutProcedureNestedInput
+  itemPayments?: Prisma.ItemPaymentUpdateManyWithoutProcedureNestedInput
 }
 
 export type ProcedureUncheckedUpdateWithoutVetInput = {
@@ -661,6 +751,7 @@ export type ProcedureUncheckedUpdateWithoutVetInput = {
   petId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   extraNotes?: Prisma.ProcedureNoteUncheckedUpdateManyWithoutProcedureNestedInput
+  itemPayments?: Prisma.ItemPaymentUncheckedUpdateManyWithoutProcedureNestedInput
 }
 
 export type ProcedureUncheckedUpdateManyWithoutVetInput = {
@@ -689,6 +780,7 @@ export type ProcedureUpdateWithoutPetInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   vet?: Prisma.VetUpdateOneRequiredWithoutProceduresNestedInput
   extraNotes?: Prisma.ProcedureNoteUpdateManyWithoutProcedureNestedInput
+  itemPayments?: Prisma.ItemPaymentUpdateManyWithoutProcedureNestedInput
 }
 
 export type ProcedureUncheckedUpdateWithoutPetInput = {
@@ -699,6 +791,7 @@ export type ProcedureUncheckedUpdateWithoutPetInput = {
   vetId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   extraNotes?: Prisma.ProcedureNoteUncheckedUpdateManyWithoutProcedureNestedInput
+  itemPayments?: Prisma.ItemPaymentUncheckedUpdateManyWithoutProcedureNestedInput
 }
 
 export type ProcedureUncheckedUpdateManyWithoutPetInput = {
@@ -717,10 +810,12 @@ export type ProcedureUncheckedUpdateManyWithoutPetInput = {
 
 export type ProcedureCountOutputType = {
   extraNotes: number
+  itemPayments: number
 }
 
 export type ProcedureCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   extraNotes?: boolean | ProcedureCountOutputTypeCountExtraNotesArgs
+  itemPayments?: boolean | ProcedureCountOutputTypeCountItemPaymentsArgs
 }
 
 /**
@@ -740,6 +835,13 @@ export type ProcedureCountOutputTypeCountExtraNotesArgs<ExtArgs extends runtime.
   where?: Prisma.ProcedureNoteWhereInput
 }
 
+/**
+ * ProcedureCountOutputType without action
+ */
+export type ProcedureCountOutputTypeCountItemPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ItemPaymentWhereInput
+}
+
 
 export type ProcedureSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -752,6 +854,7 @@ export type ProcedureSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   pet?: boolean | Prisma.PetDefaultArgs<ExtArgs>
   vet?: boolean | Prisma.VetDefaultArgs<ExtArgs>
   extraNotes?: boolean | Prisma.Procedure$extraNotesArgs<ExtArgs>
+  itemPayments?: boolean | Prisma.Procedure$itemPaymentsArgs<ExtArgs>
   _count?: boolean | Prisma.ProcedureCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["procedure"]>
 
@@ -794,6 +897,7 @@ export type ProcedureInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   pet?: boolean | Prisma.PetDefaultArgs<ExtArgs>
   vet?: boolean | Prisma.VetDefaultArgs<ExtArgs>
   extraNotes?: boolean | Prisma.Procedure$extraNotesArgs<ExtArgs>
+  itemPayments?: boolean | Prisma.Procedure$itemPaymentsArgs<ExtArgs>
   _count?: boolean | Prisma.ProcedureCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProcedureIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -811,6 +915,7 @@ export type $ProcedurePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     pet: Prisma.$PetPayload<ExtArgs>
     vet: Prisma.$VetPayload<ExtArgs>
     extraNotes: Prisma.$ProcedureNotePayload<ExtArgs>[]
+    itemPayments: Prisma.$ItemPaymentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1217,6 +1322,7 @@ export interface Prisma__ProcedureClient<T, Null = never, ExtArgs extends runtim
   pet<T extends Prisma.PetDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PetDefaultArgs<ExtArgs>>): Prisma.Prisma__PetClient<runtime.Types.Result.GetResult<Prisma.$PetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   vet<T extends Prisma.VetDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.VetDefaultArgs<ExtArgs>>): Prisma.Prisma__VetClient<runtime.Types.Result.GetResult<Prisma.$VetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   extraNotes<T extends Prisma.Procedure$extraNotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Procedure$extraNotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProcedureNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  itemPayments<T extends Prisma.Procedure$itemPaymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Procedure$itemPaymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ItemPaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1675,6 +1781,30 @@ export type Procedure$extraNotesArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.ProcedureNoteScalarFieldEnum | Prisma.ProcedureNoteScalarFieldEnum[]
+}
+
+/**
+ * Procedure.itemPayments
+ */
+export type Procedure$itemPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ItemPayment
+   */
+  select?: Prisma.ItemPaymentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ItemPayment
+   */
+  omit?: Prisma.ItemPaymentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ItemPaymentInclude<ExtArgs> | null
+  where?: Prisma.ItemPaymentWhereInput
+  orderBy?: Prisma.ItemPaymentOrderByWithRelationInput | Prisma.ItemPaymentOrderByWithRelationInput[]
+  cursor?: Prisma.ItemPaymentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ItemPaymentScalarFieldEnum | Prisma.ItemPaymentScalarFieldEnum[]
 }
 
 /**

@@ -52,3 +52,13 @@ export type Procedure = Prisma.ProcedureModel
  * 
  */
 export type ProcedureNote = Prisma.ProcedureNoteModel
+/**
+ * Model Payment
+ * 
+ */
+export type Payment = Prisma.PaymentModel
+/**
+ * Model ItemPayment
+ * 
+ */
+export type ItemPayment = Prisma.ItemPaymentModel
