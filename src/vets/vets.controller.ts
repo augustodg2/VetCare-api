@@ -41,7 +41,7 @@ export class VetsController {
   @ApiBadRequestResponse({
     description: 'Dados inválidos, usuário inexistente ou usuário sem role VET',
   })
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  //@UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles('ADMIN')
   @Post()
   create(@Body() createVetDto: CreateVetDto) {
@@ -58,7 +58,7 @@ export class VetsController {
     type: ResponseVetsDto,
     isArray: true,
   })
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  //@UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles('ADMIN', 'RECEP')
   @Get()
   lists(@Query() query: ListVetsQueryDto) {

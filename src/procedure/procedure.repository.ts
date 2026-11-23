@@ -7,10 +7,9 @@ const procedureInclude = {
   pet: { select: { id: true, name: true, species: true } },
   vet: { select: { id: true, user: { select: { name: true } } } },
   extraNotes: {
-    orderBy: { createdAt: 'asc' },
-    include: { vet: { select: { id: true, user: { select: { name: true } } } },
+    orderBy: { createdAt: 'desc' }
   },
-} satisfies Prisma.ProcedureInclude;
+}satisfies Prisma.ProcedureInclude;
 export type ProcedureWithNotes = Prisma.ProcedureGetPayload<{
   include: typeof procedureInclude;
 }>;
@@ -19,7 +18,7 @@ export type ProcedureWithNotes = Prisma.ProcedureGetPayload<{
 export class ProcedureRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(data: Prisma.ProcedureUncheckedCreateInput) {
+  create(data: Prisma.ProcedureCreateInput) {
     return this.prisma.procedure.create({
       data,
       include: procedureInclude,

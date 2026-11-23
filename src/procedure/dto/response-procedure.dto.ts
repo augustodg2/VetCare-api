@@ -3,7 +3,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import { ProcedureType } from '../../generated/prisma/enums';
 import { PetSummaryDto, VetSummaryDto } from './summarys.dto'; // ajuste para o caminho real
-import { ExtraNoteDto } from './extra-note.dto';
+import { ExtraNoteDto, ExtraNoteResponseDto } from './extra-note.dto';
 
 export class ProcedureResponseDto {
   @ApiProperty({ example: '1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d' })
@@ -39,10 +39,10 @@ export class ProcedureResponseDto {
   @Type(() => VetSummaryDto)
   vet!: VetSummaryDto;
 
-  @ApiPropertyOptional({ type: () => [ExtraNoteDto] })
+  @ApiPropertyOptional({ type: () => [ExtraNoteResponseDto] })
   @Expose()
-  @Type(() => ExtraNoteDto)
-  extraNotes!: ExtraNoteDto[];
+  @Type(() => ExtraNoteResponseDto)
+  extraNotes!: ExtraNoteResponseDto[];
 
   @ApiProperty({ example: '2026-11-22T14:31:02.000Z' })
   @Expose()

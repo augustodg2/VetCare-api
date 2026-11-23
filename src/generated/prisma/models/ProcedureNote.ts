@@ -28,7 +28,6 @@ export type ProcedureNoteMinAggregateOutputType = {
   id: string | null
   procedureId: string | null
   content: string | null
-  vetId: string | null
   createdAt: Date | null
 }
 
@@ -36,7 +35,6 @@ export type ProcedureNoteMaxAggregateOutputType = {
   id: string | null
   procedureId: string | null
   content: string | null
-  vetId: string | null
   createdAt: Date | null
 }
 
@@ -44,7 +42,6 @@ export type ProcedureNoteCountAggregateOutputType = {
   id: number
   procedureId: number
   content: number
-  vetId: number
   createdAt: number
   _all: number
 }
@@ -54,7 +51,6 @@ export type ProcedureNoteMinAggregateInputType = {
   id?: true
   procedureId?: true
   content?: true
-  vetId?: true
   createdAt?: true
 }
 
@@ -62,7 +58,6 @@ export type ProcedureNoteMaxAggregateInputType = {
   id?: true
   procedureId?: true
   content?: true
-  vetId?: true
   createdAt?: true
 }
 
@@ -70,7 +65,6 @@ export type ProcedureNoteCountAggregateInputType = {
   id?: true
   procedureId?: true
   content?: true
-  vetId?: true
   createdAt?: true
   _all?: true
 }
@@ -151,7 +145,6 @@ export type ProcedureNoteGroupByOutputType = {
   id: string
   procedureId: string
   content: string
-  vetId: string
   createdAt: Date
   _count: ProcedureNoteCountAggregateOutputType | null
   _min: ProcedureNoteMinAggregateOutputType | null
@@ -180,20 +173,16 @@ export type ProcedureNoteWhereInput = {
   id?: Prisma.StringFilter<"ProcedureNote"> | string
   procedureId?: Prisma.StringFilter<"ProcedureNote"> | string
   content?: Prisma.StringFilter<"ProcedureNote"> | string
-  vetId?: Prisma.StringFilter<"ProcedureNote"> | string
   createdAt?: Prisma.DateTimeFilter<"ProcedureNote"> | Date | string
   procedure?: Prisma.XOR<Prisma.ProcedureScalarRelationFilter, Prisma.ProcedureWhereInput>
-  vet?: Prisma.XOR<Prisma.VetScalarRelationFilter, Prisma.VetWhereInput>
 }
 
 export type ProcedureNoteOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   procedureId?: Prisma.SortOrder
   content?: Prisma.SortOrder
-  vetId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   procedure?: Prisma.ProcedureOrderByWithRelationInput
-  vet?: Prisma.VetOrderByWithRelationInput
 }
 
 export type ProcedureNoteWhereUniqueInput = Prisma.AtLeast<{
@@ -203,17 +192,14 @@ export type ProcedureNoteWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ProcedureNoteWhereInput | Prisma.ProcedureNoteWhereInput[]
   procedureId?: Prisma.StringFilter<"ProcedureNote"> | string
   content?: Prisma.StringFilter<"ProcedureNote"> | string
-  vetId?: Prisma.StringFilter<"ProcedureNote"> | string
   createdAt?: Prisma.DateTimeFilter<"ProcedureNote"> | Date | string
   procedure?: Prisma.XOR<Prisma.ProcedureScalarRelationFilter, Prisma.ProcedureWhereInput>
-  vet?: Prisma.XOR<Prisma.VetScalarRelationFilter, Prisma.VetWhereInput>
 }, "id">
 
 export type ProcedureNoteOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   procedureId?: Prisma.SortOrder
   content?: Prisma.SortOrder
-  vetId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.ProcedureNoteCountOrderByAggregateInput
   _max?: Prisma.ProcedureNoteMaxOrderByAggregateInput
@@ -227,7 +213,6 @@ export type ProcedureNoteScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"ProcedureNote"> | string
   procedureId?: Prisma.StringWithAggregatesFilter<"ProcedureNote"> | string
   content?: Prisma.StringWithAggregatesFilter<"ProcedureNote"> | string
-  vetId?: Prisma.StringWithAggregatesFilter<"ProcedureNote"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ProcedureNote"> | Date | string
 }
 
@@ -236,14 +221,12 @@ export type ProcedureNoteCreateInput = {
   content: string
   createdAt?: Date | string
   procedure: Prisma.ProcedureCreateNestedOneWithoutExtraNotesInput
-  vet: Prisma.VetCreateNestedOneWithoutProcedureNotesInput
 }
 
 export type ProcedureNoteUncheckedCreateInput = {
   id?: string
   procedureId: string
   content: string
-  vetId: string
   createdAt?: Date | string
 }
 
@@ -252,14 +235,12 @@ export type ProcedureNoteUpdateInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   procedure?: Prisma.ProcedureUpdateOneRequiredWithoutExtraNotesNestedInput
-  vet?: Prisma.VetUpdateOneRequiredWithoutProcedureNotesNestedInput
 }
 
 export type ProcedureNoteUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   procedureId?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  vetId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -267,7 +248,6 @@ export type ProcedureNoteCreateManyInput = {
   id?: string
   procedureId: string
   content: string
-  vetId: string
   createdAt?: Date | string
 }
 
@@ -281,7 +261,6 @@ export type ProcedureNoteUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   procedureId?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  vetId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -299,7 +278,6 @@ export type ProcedureNoteCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   procedureId?: Prisma.SortOrder
   content?: Prisma.SortOrder
-  vetId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -307,7 +285,6 @@ export type ProcedureNoteMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   procedureId?: Prisma.SortOrder
   content?: Prisma.SortOrder
-  vetId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -315,50 +292,7 @@ export type ProcedureNoteMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   procedureId?: Prisma.SortOrder
   content?: Prisma.SortOrder
-  vetId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-}
-
-export type ProcedureNoteCreateNestedManyWithoutVetInput = {
-  create?: Prisma.XOR<Prisma.ProcedureNoteCreateWithoutVetInput, Prisma.ProcedureNoteUncheckedCreateWithoutVetInput> | Prisma.ProcedureNoteCreateWithoutVetInput[] | Prisma.ProcedureNoteUncheckedCreateWithoutVetInput[]
-  connectOrCreate?: Prisma.ProcedureNoteCreateOrConnectWithoutVetInput | Prisma.ProcedureNoteCreateOrConnectWithoutVetInput[]
-  createMany?: Prisma.ProcedureNoteCreateManyVetInputEnvelope
-  connect?: Prisma.ProcedureNoteWhereUniqueInput | Prisma.ProcedureNoteWhereUniqueInput[]
-}
-
-export type ProcedureNoteUncheckedCreateNestedManyWithoutVetInput = {
-  create?: Prisma.XOR<Prisma.ProcedureNoteCreateWithoutVetInput, Prisma.ProcedureNoteUncheckedCreateWithoutVetInput> | Prisma.ProcedureNoteCreateWithoutVetInput[] | Prisma.ProcedureNoteUncheckedCreateWithoutVetInput[]
-  connectOrCreate?: Prisma.ProcedureNoteCreateOrConnectWithoutVetInput | Prisma.ProcedureNoteCreateOrConnectWithoutVetInput[]
-  createMany?: Prisma.ProcedureNoteCreateManyVetInputEnvelope
-  connect?: Prisma.ProcedureNoteWhereUniqueInput | Prisma.ProcedureNoteWhereUniqueInput[]
-}
-
-export type ProcedureNoteUpdateManyWithoutVetNestedInput = {
-  create?: Prisma.XOR<Prisma.ProcedureNoteCreateWithoutVetInput, Prisma.ProcedureNoteUncheckedCreateWithoutVetInput> | Prisma.ProcedureNoteCreateWithoutVetInput[] | Prisma.ProcedureNoteUncheckedCreateWithoutVetInput[]
-  connectOrCreate?: Prisma.ProcedureNoteCreateOrConnectWithoutVetInput | Prisma.ProcedureNoteCreateOrConnectWithoutVetInput[]
-  upsert?: Prisma.ProcedureNoteUpsertWithWhereUniqueWithoutVetInput | Prisma.ProcedureNoteUpsertWithWhereUniqueWithoutVetInput[]
-  createMany?: Prisma.ProcedureNoteCreateManyVetInputEnvelope
-  set?: Prisma.ProcedureNoteWhereUniqueInput | Prisma.ProcedureNoteWhereUniqueInput[]
-  disconnect?: Prisma.ProcedureNoteWhereUniqueInput | Prisma.ProcedureNoteWhereUniqueInput[]
-  delete?: Prisma.ProcedureNoteWhereUniqueInput | Prisma.ProcedureNoteWhereUniqueInput[]
-  connect?: Prisma.ProcedureNoteWhereUniqueInput | Prisma.ProcedureNoteWhereUniqueInput[]
-  update?: Prisma.ProcedureNoteUpdateWithWhereUniqueWithoutVetInput | Prisma.ProcedureNoteUpdateWithWhereUniqueWithoutVetInput[]
-  updateMany?: Prisma.ProcedureNoteUpdateManyWithWhereWithoutVetInput | Prisma.ProcedureNoteUpdateManyWithWhereWithoutVetInput[]
-  deleteMany?: Prisma.ProcedureNoteScalarWhereInput | Prisma.ProcedureNoteScalarWhereInput[]
-}
-
-export type ProcedureNoteUncheckedUpdateManyWithoutVetNestedInput = {
-  create?: Prisma.XOR<Prisma.ProcedureNoteCreateWithoutVetInput, Prisma.ProcedureNoteUncheckedCreateWithoutVetInput> | Prisma.ProcedureNoteCreateWithoutVetInput[] | Prisma.ProcedureNoteUncheckedCreateWithoutVetInput[]
-  connectOrCreate?: Prisma.ProcedureNoteCreateOrConnectWithoutVetInput | Prisma.ProcedureNoteCreateOrConnectWithoutVetInput[]
-  upsert?: Prisma.ProcedureNoteUpsertWithWhereUniqueWithoutVetInput | Prisma.ProcedureNoteUpsertWithWhereUniqueWithoutVetInput[]
-  createMany?: Prisma.ProcedureNoteCreateManyVetInputEnvelope
-  set?: Prisma.ProcedureNoteWhereUniqueInput | Prisma.ProcedureNoteWhereUniqueInput[]
-  disconnect?: Prisma.ProcedureNoteWhereUniqueInput | Prisma.ProcedureNoteWhereUniqueInput[]
-  delete?: Prisma.ProcedureNoteWhereUniqueInput | Prisma.ProcedureNoteWhereUniqueInput[]
-  connect?: Prisma.ProcedureNoteWhereUniqueInput | Prisma.ProcedureNoteWhereUniqueInput[]
-  update?: Prisma.ProcedureNoteUpdateWithWhereUniqueWithoutVetInput | Prisma.ProcedureNoteUpdateWithWhereUniqueWithoutVetInput[]
-  updateMany?: Prisma.ProcedureNoteUpdateManyWithWhereWithoutVetInput | Prisma.ProcedureNoteUpdateManyWithWhereWithoutVetInput[]
-  deleteMany?: Prisma.ProcedureNoteScalarWhereInput | Prisma.ProcedureNoteScalarWhereInput[]
 }
 
 export type ProcedureNoteCreateNestedManyWithoutProcedureInput = {
@@ -403,68 +337,15 @@ export type ProcedureNoteUncheckedUpdateManyWithoutProcedureNestedInput = {
   deleteMany?: Prisma.ProcedureNoteScalarWhereInput | Prisma.ProcedureNoteScalarWhereInput[]
 }
 
-export type ProcedureNoteCreateWithoutVetInput = {
-  id?: string
-  content: string
-  createdAt?: Date | string
-  procedure: Prisma.ProcedureCreateNestedOneWithoutExtraNotesInput
-}
-
-export type ProcedureNoteUncheckedCreateWithoutVetInput = {
-  id?: string
-  procedureId: string
-  content: string
-  createdAt?: Date | string
-}
-
-export type ProcedureNoteCreateOrConnectWithoutVetInput = {
-  where: Prisma.ProcedureNoteWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProcedureNoteCreateWithoutVetInput, Prisma.ProcedureNoteUncheckedCreateWithoutVetInput>
-}
-
-export type ProcedureNoteCreateManyVetInputEnvelope = {
-  data: Prisma.ProcedureNoteCreateManyVetInput | Prisma.ProcedureNoteCreateManyVetInput[]
-  skipDuplicates?: boolean
-}
-
-export type ProcedureNoteUpsertWithWhereUniqueWithoutVetInput = {
-  where: Prisma.ProcedureNoteWhereUniqueInput
-  update: Prisma.XOR<Prisma.ProcedureNoteUpdateWithoutVetInput, Prisma.ProcedureNoteUncheckedUpdateWithoutVetInput>
-  create: Prisma.XOR<Prisma.ProcedureNoteCreateWithoutVetInput, Prisma.ProcedureNoteUncheckedCreateWithoutVetInput>
-}
-
-export type ProcedureNoteUpdateWithWhereUniqueWithoutVetInput = {
-  where: Prisma.ProcedureNoteWhereUniqueInput
-  data: Prisma.XOR<Prisma.ProcedureNoteUpdateWithoutVetInput, Prisma.ProcedureNoteUncheckedUpdateWithoutVetInput>
-}
-
-export type ProcedureNoteUpdateManyWithWhereWithoutVetInput = {
-  where: Prisma.ProcedureNoteScalarWhereInput
-  data: Prisma.XOR<Prisma.ProcedureNoteUpdateManyMutationInput, Prisma.ProcedureNoteUncheckedUpdateManyWithoutVetInput>
-}
-
-export type ProcedureNoteScalarWhereInput = {
-  AND?: Prisma.ProcedureNoteScalarWhereInput | Prisma.ProcedureNoteScalarWhereInput[]
-  OR?: Prisma.ProcedureNoteScalarWhereInput[]
-  NOT?: Prisma.ProcedureNoteScalarWhereInput | Prisma.ProcedureNoteScalarWhereInput[]
-  id?: Prisma.StringFilter<"ProcedureNote"> | string
-  procedureId?: Prisma.StringFilter<"ProcedureNote"> | string
-  content?: Prisma.StringFilter<"ProcedureNote"> | string
-  vetId?: Prisma.StringFilter<"ProcedureNote"> | string
-  createdAt?: Prisma.DateTimeFilter<"ProcedureNote"> | Date | string
-}
-
 export type ProcedureNoteCreateWithoutProcedureInput = {
   id?: string
   content: string
   createdAt?: Date | string
-  vet: Prisma.VetCreateNestedOneWithoutProcedureNotesInput
 }
 
 export type ProcedureNoteUncheckedCreateWithoutProcedureInput = {
   id?: string
   content: string
-  vetId: string
   createdAt?: Date | string
 }
 
@@ -494,38 +375,19 @@ export type ProcedureNoteUpdateManyWithWhereWithoutProcedureInput = {
   data: Prisma.XOR<Prisma.ProcedureNoteUpdateManyMutationInput, Prisma.ProcedureNoteUncheckedUpdateManyWithoutProcedureInput>
 }
 
-export type ProcedureNoteCreateManyVetInput = {
-  id?: string
-  procedureId: string
-  content: string
-  createdAt?: Date | string
-}
-
-export type ProcedureNoteUpdateWithoutVetInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  procedure?: Prisma.ProcedureUpdateOneRequiredWithoutExtraNotesNestedInput
-}
-
-export type ProcedureNoteUncheckedUpdateWithoutVetInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  procedureId?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type ProcedureNoteUncheckedUpdateManyWithoutVetInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  procedureId?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type ProcedureNoteScalarWhereInput = {
+  AND?: Prisma.ProcedureNoteScalarWhereInput | Prisma.ProcedureNoteScalarWhereInput[]
+  OR?: Prisma.ProcedureNoteScalarWhereInput[]
+  NOT?: Prisma.ProcedureNoteScalarWhereInput | Prisma.ProcedureNoteScalarWhereInput[]
+  id?: Prisma.StringFilter<"ProcedureNote"> | string
+  procedureId?: Prisma.StringFilter<"ProcedureNote"> | string
+  content?: Prisma.StringFilter<"ProcedureNote"> | string
+  createdAt?: Prisma.DateTimeFilter<"ProcedureNote"> | Date | string
 }
 
 export type ProcedureNoteCreateManyProcedureInput = {
   id?: string
   content: string
-  vetId: string
   createdAt?: Date | string
 }
 
@@ -533,20 +395,17 @@ export type ProcedureNoteUpdateWithoutProcedureInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  vet?: Prisma.VetUpdateOneRequiredWithoutProcedureNotesNestedInput
 }
 
 export type ProcedureNoteUncheckedUpdateWithoutProcedureInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  vetId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ProcedureNoteUncheckedUpdateManyWithoutProcedureInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  vetId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -556,65 +415,53 @@ export type ProcedureNoteSelect<ExtArgs extends runtime.Types.Extensions.Interna
   id?: boolean
   procedureId?: boolean
   content?: boolean
-  vetId?: boolean
   createdAt?: boolean
   procedure?: boolean | Prisma.ProcedureDefaultArgs<ExtArgs>
-  vet?: boolean | Prisma.VetDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["procedureNote"]>
 
 export type ProcedureNoteSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   procedureId?: boolean
   content?: boolean
-  vetId?: boolean
   createdAt?: boolean
   procedure?: boolean | Prisma.ProcedureDefaultArgs<ExtArgs>
-  vet?: boolean | Prisma.VetDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["procedureNote"]>
 
 export type ProcedureNoteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   procedureId?: boolean
   content?: boolean
-  vetId?: boolean
   createdAt?: boolean
   procedure?: boolean | Prisma.ProcedureDefaultArgs<ExtArgs>
-  vet?: boolean | Prisma.VetDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["procedureNote"]>
 
 export type ProcedureNoteSelectScalar = {
   id?: boolean
   procedureId?: boolean
   content?: boolean
-  vetId?: boolean
   createdAt?: boolean
 }
 
-export type ProcedureNoteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "procedureId" | "content" | "vetId" | "createdAt", ExtArgs["result"]["procedureNote"]>
+export type ProcedureNoteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "procedureId" | "content" | "createdAt", ExtArgs["result"]["procedureNote"]>
 export type ProcedureNoteInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   procedure?: boolean | Prisma.ProcedureDefaultArgs<ExtArgs>
-  vet?: boolean | Prisma.VetDefaultArgs<ExtArgs>
 }
 export type ProcedureNoteIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   procedure?: boolean | Prisma.ProcedureDefaultArgs<ExtArgs>
-  vet?: boolean | Prisma.VetDefaultArgs<ExtArgs>
 }
 export type ProcedureNoteIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   procedure?: boolean | Prisma.ProcedureDefaultArgs<ExtArgs>
-  vet?: boolean | Prisma.VetDefaultArgs<ExtArgs>
 }
 
 export type $ProcedureNotePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ProcedureNote"
   objects: {
     procedure: Prisma.$ProcedurePayload<ExtArgs>
-    vet: Prisma.$VetPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     procedureId: string
     content: string
-    vetId: string
     createdAt: Date
   }, ExtArgs["result"]["procedureNote"]>
   composites: {}
@@ -1011,7 +858,6 @@ readonly fields: ProcedureNoteFieldRefs;
 export interface Prisma__ProcedureNoteClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   procedure<T extends Prisma.ProcedureDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProcedureDefaultArgs<ExtArgs>>): Prisma.Prisma__ProcedureClient<runtime.Types.Result.GetResult<Prisma.$ProcedurePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  vet<T extends Prisma.VetDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.VetDefaultArgs<ExtArgs>>): Prisma.Prisma__VetClient<runtime.Types.Result.GetResult<Prisma.$VetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1044,7 +890,6 @@ export interface ProcedureNoteFieldRefs {
   readonly id: Prisma.FieldRef<"ProcedureNote", 'String'>
   readonly procedureId: Prisma.FieldRef<"ProcedureNote", 'String'>
   readonly content: Prisma.FieldRef<"ProcedureNote", 'String'>
-  readonly vetId: Prisma.FieldRef<"ProcedureNote", 'String'>
   readonly createdAt: Prisma.FieldRef<"ProcedureNote", 'DateTime'>
 }
     

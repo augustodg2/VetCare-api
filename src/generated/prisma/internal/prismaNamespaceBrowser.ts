@@ -165,7 +165,6 @@ export const ProcedureNoteScalarFieldEnum = {
   id: 'id',
   procedureId: 'procedureId',
   content: 'content',
-  vetId: 'vetId',
   createdAt: 'createdAt'
 } as const
 
