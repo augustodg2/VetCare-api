@@ -100,10 +100,14 @@ export class AppointmentController {
   @ApiNotFoundResponse({ description: 'Consulta não encontrada' })
   @ApiConflictResponse({ description: 'Veterinário já possui consulta nesse horário' })
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN', 'RECEP')
+  @Roles('ADMIN', 'RECEP', 'VET')
   @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateAppointmentDto) {
-    return this.appointmentService.update(id, dto);
+  update(
+    @Param('id') id: string,
+    @Body() dto: UpdateAppointmentDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.appointmentService.update(id, dto, user);
   }
 
   //Cancelar
@@ -121,10 +125,10 @@ export class AppointmentController {
   @ApiBadRequestResponse({ description: 'Consulta já cancelada ou já concluída' })
   @ApiNotFoundResponse({ description: 'Consulta não encontrada' })
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN', 'RECEP')
+  @Roles('ADMIN', 'RECEP', 'VET')
   @Patch(':id/cancel')
-  cancel(@Param('id') id: string) {
-    return this.appointmentService.cancel(id);
+  cancel(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.appointmentService.cancel(id, user);
   }
 
   //concluir

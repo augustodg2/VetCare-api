@@ -149,7 +149,15 @@ private readonly PENDING_THRESHOLD_MS = 2 * 60 * 60 * 1000; // 2 horas
  }
 
 
-  async update(id: string, data: UpdateAppointmentDto) {
+  private async assertCanManage(appointment: { vetId: string }, user?: AuthenticatedUser) {
+    if (user?.role !== 'VET') return;
+    const ownVet = await this.vetsRepository.getByUserId(user.id);
+    if (!ownVet || ownVet.id !== appointment.vetId) {
+      throw new ForbiddenException('Você só pode alterar as suas próprias consultas');
+    }
+  }
+
+  async update(id: string, data: UpdateAppointmentDto, user?: AuthenticatedUser) {
     if (data.dateTime === undefined && data.type === undefined && data.obs === undefined) {
       throw new BadRequestException('Informe ao menos um campo para atualizar');
     }
@@ -158,6 +166,7 @@ private readonly PENDING_THRESHOLD_MS = 2 * 60 * 60 * 1000; // 2 horas
     if (!appointment) {
       throw new NotFoundException('Consulta não encontrada');
     }
+    await this.assertCanManage(appointment, user);
 
     if (appointment.status !== 'ACTIVE') {
       throw new BadRequestException('Apenas consultas ativas podem ser alteradas');
@@ -192,11 +201,12 @@ private readonly PENDING_THRESHOLD_MS = 2 * 60 * 60 * 1000; // 2 horas
     })
   }
 
-  async cancel(id: string) {
+  async cancel(id: string, user?: AuthenticatedUser) {
     const appointment = await this.appointmentRepository.findById(id);
     if (!appointment) {
       throw new NotFoundException('Consulta não encontrada');
     }
+    await this.assertCanManage(appointment, user);
 
     if (appointment.status === 'CANCELLED') {
       throw new BadRequestException('A consulta já está cancelada');
