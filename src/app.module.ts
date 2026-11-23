@@ -11,6 +11,7 @@ import { PetModule } from './pet/pet.module';
 import { PetOwnerModule } from './pet-owner/pet-owner.module';
 import { AppointmentModule } from './appointment/appointment.module';
 import { ProcedureModule } from './procedure/procedure.module';
+import { PaymentModule } from './payment/payment.module';
 
 
 @Module({
@@ -25,7 +26,8 @@ import { ProcedureModule } from './procedure/procedure.module';
     PetModule,
     PetOwnerModule,
     AppointmentModule,
-    ProcedureModule
+    ProcedureModule,
+    PaymentModule
   ],
   controllers: [AppController],
   providers: [AppService],
