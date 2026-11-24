@@ -8,6 +8,10 @@ import { plainToInstance } from 'class-transformer';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { PaymentResponseDto } from './dto/payment-response.dto';
 import { PaymentRepository, PaymentWithItems } from './payment.repository';
+import { ListPaymentsQueryDto } from './dto/list-payment-query.dto';
+import { ListPaymentsResponseDto } from './dto/list-payments-response.dto';
+
+const PAGE_SIZE = 20
 
 const toCents = (value: { toString(): string } | number): number =>
   Math.round(Number(value.toString()) * 100);
@@ -78,5 +82,28 @@ export class PaymentService {
       },
       { excludeExtraneousValues: true },
     );
+  }
+
+  async list(query: ListPaymentsQueryDto): Promise<ListPaymentsResponseDto> {
+  const { page, ...filters } = query;
+
+  if (filters.dateFrom && filters.dateTo && filters.dateFrom > filters.dateTo) {
+    throw new BadRequestException('dateFrom não pode ser maior que dateTo');
+  }
+
+  const { items, total } = await this.repository.findMany({
+    filters,
+    page,
+    limit: PAGE_SIZE,
+  });
+
+  return plainToInstance(ListPaymentsResponseDto, {
+    data: items.map((payment) => this.toResponse(payment)),
+    meta: {
+      total,
+      page,
+      PAGE_SIZE
+    }
+  }, {excludeExtraneousValues: true})
   }
 }

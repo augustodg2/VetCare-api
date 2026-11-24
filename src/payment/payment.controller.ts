@@ -1,15 +1,18 @@
 // src/payment/payment.controller.ts
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { PaymentResponseDto } from './dto/payment-response.dto';
 import { PaymentService } from './payment.service';
+import { ListPaymentsResponseDto } from './dto/list-payments-response.dto';
+import { ListPaymentsQueryDto } from './dto/list-payment-query.dto';
 
 @ApiTags('Payments')
 @Controller('payments')
@@ -37,5 +40,25 @@ export class PaymentController {
   })
   create(@Body() dto: CreatePaymentDto): Promise<PaymentResponseDto> {
     return this.service.create(dto);
+  }
+
+
+  @Get()
+  @ApiOperation({
+    summary: 'Lista pagamentos',
+    description:
+      'Retorna os pagamentos paginados, do mais recente para o mais antigo (`createdAt` desc). ' +
+      'Os filtros por `status` e por intervalo de data de criação (`dateFrom`/`dateTo`) são opcionais e combináveis. ' +
+      'Cada pagamento traz `subtotal`, `discount` e `total`.',
+  })
+  @ApiOkResponse({
+    description: 'Lista paginada de pagamentos',
+    type: ListPaymentsResponseDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Parâmetros de query inválidos ou `dateFrom` maior que `dateTo`',
+  })
+  list(@Query() query: ListPaymentsQueryDto): Promise<ListPaymentsResponseDto> {
+    return this.service.list(query);
   }
 }

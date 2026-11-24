@@ -1,6 +1,6 @@
 // src/payment/payment.repository.ts
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '../generated/prisma/client';
+import { PaymentStatus, Prisma } from '../generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 
 const paymentInclude = {
@@ -20,6 +20,18 @@ export interface CreatePaymentData {
   discount: number;
   notes?: string;
   items: { procedureId: string; amount: number; description?: string }[];
+}
+
+export interface FindPaymentsFilters {
+  status?: PaymentStatus;
+  dateFrom?: Date;
+  dateTo?: Date;
+}
+
+export interface FindPaymentsParams {
+  filters: FindPaymentsFilters;
+  page: number;
+  limit: number;
 }
 
 @Injectable()
@@ -51,4 +63,35 @@ export class PaymentRepository {
       include: paymentInclude,
     });
   }
+
+  async findMany({ filters, page, limit }: FindPaymentsParams) {
+  const where = this.buildWhere(filters);
+
+  const [items, total] = await this.prisma.$transaction([
+    this.prisma.payment.findMany({
+      where,
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+      include: paymentInclude,
+    }),
+    this.prisma.payment.count({ where }),
+  ]);
+
+  return { items, total };
+}
+
+private buildWhere(filters: FindPaymentsFilters): Prisma.PaymentWhereInput {
+  const { status, dateFrom, dateTo } = filters;
+
+  return {
+    ...(status && { status }),
+    ...((dateFrom || dateTo) && {
+      createdAt: {
+        ...(dateFrom && { gte: dateFrom }),
+        ...(dateTo && { lte: dateTo }),
+      },
+    }),
+  };
+}
 }
