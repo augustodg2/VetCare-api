@@ -1,11 +1,13 @@
 // src/payment/payment.controller.ts
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiConflictResponse,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { CreatePaymentDto } from './dto/create-payment.dto';
@@ -60,5 +62,60 @@ export class PaymentController {
   })
   list(@Query() query: ListPaymentsQueryDto): Promise<ListPaymentsResponseDto> {
     return this.service.list(query);
+  }
+
+  
+  @Patch(':id/cancel')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Cancela um pagamento',
+    description:
+      'Muda o status do pagamento de `PAID` para `CANCELED`. O registro não é apagado, ' +
+      'preservando o histórico financeiro. Só é possível cancelar pagamentos com status `PAID`. ' +
+      'Pagamentos `CANCELED` ou `REFUNDED` não podem ser alterados. ' +
+      'Para corrigir valores ou itens, cancele e registre um novo pagamento.',
+  })
+  @ApiParam({
+    name: 'id',
+    format: 'uuid',
+    description: 'ID do pagamento',
+  })
+  @ApiOkResponse({
+    description: 'Pagamento cancelado. Retorna o pagamento atualizado',
+    type: PaymentResponseDto,
+  })
+  @ApiNotFoundResponse({ description: 'Pagamento não encontrado' })
+  @ApiConflictResponse({
+    description: 'O pagamento não está com status `PAID` e não pode ser cancelado',
+  })
+  cancel(@Param('id', ParseUUIDPipe) id: string): Promise<PaymentResponseDto> {
+    return this.service.cancel(id);
+  }
+
+  @Patch(':id/refund')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Estorna um pagamento',
+    description:
+      'Muda o status do pagamento de `PAID` para `REFUNDED`, indicando que o valor foi devolvido ao tutor. ' +
+      'O registro não é apagado, preservando o histórico financeiro. ' +
+      'Só é possível estornar pagamentos com status `PAID`. ' +
+      'Pagamentos `CANCELED` ou `REFUNDED` não podem ser alterados.',
+  })
+  @ApiParam({
+    name: 'id',
+    format: 'uuid',
+    description: 'ID do pagamento',
+  })
+  @ApiOkResponse({
+    description: 'Pagamento estornado. Retorna o pagamento atualizado',
+    type: PaymentResponseDto,
+  })
+  @ApiNotFoundResponse({ description: 'Pagamento não encontrado' })
+  @ApiConflictResponse({
+    description: 'O pagamento não está com status `PAID` e não pode ser estornado',
+  })
+  refund(@Param('id', ParseUUIDPipe) id: string): Promise<PaymentResponseDto> {
+    return this.service.refund(id);
   }
 }

@@ -81,17 +81,42 @@ export class PaymentRepository {
   return { items, total };
 }
 
-private buildWhere(filters: FindPaymentsFilters): Prisma.PaymentWhereInput {
-  const { status, dateFrom, dateTo } = filters;
+  private buildWhere(filters: FindPaymentsFilters): Prisma.PaymentWhereInput {
+    const { status, dateFrom, dateTo } = filters;
 
-  return {
-    ...(status && { status }),
-    ...((dateFrom || dateTo) && {
-      createdAt: {
-        ...(dateFrom && { gte: dateFrom }),
-        ...(dateTo && { lte: dateTo }),
-      },
-    }),
-  };
-}
+    return {
+      ...(status && { status }),
+      ...((dateFrom || dateTo) && {
+        createdAt: {
+          ...(dateFrom && { gte: dateFrom }),
+          ...(dateTo && { lte: dateTo }),
+        },
+      }),
+    };
+  }
+
+  findById(id: string): Promise<PaymentWithItems | null> {
+    return this.prisma.payment.findUnique({
+      where: { id },
+      include: paymentInclude,
+    });
+  }
+
+  async changeStatusIfPaid(
+    id: string,
+    newStatus: Exclude<PaymentStatus, 'PAID'>,
+  ): Promise<PaymentWithItems | null> {
+    const { count } = await this.prisma.payment.updateMany({
+      where: { id, status: PaymentStatus.PAID },
+      data: { status: newStatus },
+    });
+
+    if (count === 0) return null;
+
+    return this.findById(id);
+  }
+
+
+  
+
 }

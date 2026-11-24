@@ -1,6 +1,7 @@
 // src/payment/payment.service.ts
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -10,6 +11,7 @@ import { PaymentResponseDto } from './dto/payment-response.dto';
 import { PaymentRepository, PaymentWithItems } from './payment.repository';
 import { ListPaymentsQueryDto } from './dto/list-payment-query.dto';
 import { ListPaymentsResponseDto } from './dto/list-payments-response.dto';
+import { PaymentStatus } from '../generated/prisma/enums';
 
 const PAGE_SIZE = 20
 
@@ -105,5 +107,41 @@ export class PaymentService {
       PAGE_SIZE
     }
   }, {excludeExtraneousValues: true})
+  }
+
+  cancel(id: string): Promise<PaymentResponseDto> {
+    return this.changeStatusFromPaid(id, PaymentStatus.CANCELED, 'cancelar');
+  }
+
+  refund(id: string): Promise<PaymentResponseDto> {
+    return this.changeStatusFromPaid(id, PaymentStatus.REFUNDED, 'estornar');
+  }
+
+  private async changeStatusFromPaid(
+    id: string,
+    newStatus: Exclude<PaymentStatus, 'PAID'>,
+    action: string,
+  ): Promise<PaymentResponseDto> {
+    const payment = await this.repository.findById(id);
+
+    if (!payment) {
+      throw new NotFoundException('Pagamento não encontrado');
+    }
+
+    if (payment.status !== PaymentStatus.PAID) {
+      throw new ConflictException(
+        `Não é possível ${action} um pagamento com status ${payment.status}`,
+      );
+    }
+
+    const updated = await this.repository.changeStatusIfPaid(id, newStatus);
+
+    if (!updated) {
+      throw new ConflictException(
+        'O status do pagamento foi alterado. Tente novamente.',
+      );
+    }
+
+    return this.toResponse(updated);
   }
 }
