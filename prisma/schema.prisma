@@ -156,16 +156,25 @@ model ProcedureNote {
   @@index([procedureId, createdAt])
 }
 
+enum PaymentStatus {
+  PAID
+  CANCELED
+  REFUNDED
+}
+
 model Payment {
-  id            String   @id @default(uuid())
+  id            String        @id @default(uuid())
   paymentMethod String
-  discount      Decimal  @default(0) @db.Decimal(10, 2)
-  notes         String?  @db.Text
-  createdAt     DateTime @default(now())
+  status        PaymentStatus @default(PAID)
+  discount      Decimal       @default(0) @db.Decimal(10, 2)
+  notes         String?       @db.Text
+  createdAt     DateTime      @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   items ItemPayment[]
 
   @@index([createdAt])
+  @@index([status])
 }
 
 model ItemPayment {

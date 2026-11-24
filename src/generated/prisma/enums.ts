@@ -53,3 +53,12 @@ export const ProcedureType = {
 } as const
 
 export type ProcedureType = (typeof ProcedureType)[keyof typeof ProcedureType]
+
+
+export const PaymentStatus = {
+  PAID: 'PAID',
+  CANCELED: 'CANCELED',
+  REFUNDED: 'REFUNDED'
+} as const
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]

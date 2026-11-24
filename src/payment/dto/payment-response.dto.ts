@@ -1,7 +1,7 @@
 // src/payment/dto/payment-response.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
-import { ProcedureType } from '../../generated/prisma/enums';
+import { PaymentStatus, ProcedureType } from '../../generated/prisma/enums';
 
 export class PaymentProcedureSummaryDto {
   @ApiProperty({ example: '45986740-79af-4dd6-97e0-4d6a4828b919' })
@@ -52,6 +52,14 @@ export class PaymentResponseDto {
   @ApiProperty({ example: 'PIX' })
   @Expose()
   paymentMethod!: string;
+
+  @ApiProperty({
+    description: 'Satus do pagamento',
+    enum: PaymentStatus,
+    enumName: 'PaymentStatus',}
+  )
+  @Expose()
+  status: PaymentStatus
 
   @ApiProperty({
     example: 200.0,

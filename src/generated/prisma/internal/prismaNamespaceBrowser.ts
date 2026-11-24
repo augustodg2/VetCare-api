@@ -176,9 +176,11 @@ export type ProcedureNoteScalarFieldEnum = (typeof ProcedureNoteScalarFieldEnum)
 export const PaymentScalarFieldEnum = {
   id: 'id',
   paymentMethod: 'paymentMethod',
+  status: 'status',
   discount: 'discount',
   notes: 'notes',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
