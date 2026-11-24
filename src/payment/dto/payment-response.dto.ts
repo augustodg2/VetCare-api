@@ -95,4 +95,8 @@ export class PaymentResponseDto {
   @ApiProperty({ example: '2026-11-23T14:31:02.000Z' })
   @Expose()
   createdAt!: Date;
+
+  @ApiProperty({example: '2026-09-23T14:31:02.000Z'})
+  @Expose()
+  updatedAt!: Date;
 }
