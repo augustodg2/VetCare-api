@@ -86,27 +86,37 @@ export class PaymentService {
     );
   }
 
+  async findOne(id: string): Promise<PaymentResponseDto> {
+  const payment = await this.repository.findById(id);
+
+  if (!payment) {
+    throw new NotFoundException('Pagamento não encontrado');
+  }
+
+  return this.toResponse(payment);
+  }
+
   async list(query: ListPaymentsQueryDto): Promise<ListPaymentsResponseDto> {
   const { page, ...filters } = query;
 
-  if (filters.dateFrom && filters.dateTo && filters.dateFrom > filters.dateTo) {
-    throw new BadRequestException('dateFrom não pode ser maior que dateTo');
-  }
-
-  const { items, total } = await this.repository.findMany({
-    filters,
-    page,
-    limit: PAGE_SIZE,
-  });
-
-  return plainToInstance(ListPaymentsResponseDto, {
-    data: items.map((payment) => this.toResponse(payment)),
-    meta: {
-      total,
-      page,
-      PAGE_SIZE
+    if (filters.dateFrom && filters.dateTo && filters.dateFrom > filters.dateTo) {
+      throw new BadRequestException('dateFrom não pode ser maior que dateTo');
     }
-  }, {excludeExtraneousValues: true})
+
+    const { items, total } = await this.repository.findMany({
+      filters,
+      page,
+      limit: PAGE_SIZE,
+    });
+
+    return plainToInstance(ListPaymentsResponseDto, {
+      data: items.map((payment) => this.toResponse(payment)),
+      meta: {
+        total,
+        page,
+        PAGE_SIZE
+      }
+    }, {excludeExtraneousValues: true})
   }
 
   cancel(id: string): Promise<PaymentResponseDto> {

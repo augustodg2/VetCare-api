@@ -93,4 +93,26 @@ export class ProcedureController {
   ) {
     return this.procedureService.addExtraNote(id, dto);
   } 
+
+  @Get(':id')
+  @ApiOperation({
+    summary: 'Busca um procedimento pelo ID',
+    description:
+      'Retorna o procedimento com o resumo do pet, o resumo do veterinário e as notas extras (da mais recente para a mais antiga).',
+  })
+  @ApiParam({
+    name: 'id',
+    format: 'uuid',
+    description: 'ID do procedimento',
+    example: '45986740-79af-4dd6-97e0-4d6a4828b919',
+  })
+  @ApiOkResponse({
+    description: 'Procedimento encontrado',
+    type: ProcedureResponseDto,
+  })
+  @ApiBadRequestResponse({ description: 'ID inválido (não é um UUID)' })
+  @ApiNotFoundResponse({ description: 'Procedimento não encontrado' })
+  findOne(@Param('id', ParseUUIDPipe) id: string): Promise<ProcedureResponseDto> {
+    return this.procedureService.findOne(id);
+  }
 }

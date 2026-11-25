@@ -118,4 +118,26 @@ export class PaymentController {
   refund(@Param('id', ParseUUIDPipe) id: string): Promise<PaymentResponseDto> {
     return this.service.refund(id);
   }
+
+  @Get(':id')
+  @ApiOperation({
+    summary: 'Busca um pagamento pelo ID',
+    description:
+      'Retorna o pagamento com status, desconto, `subtotal` (soma dos itens), `total` (subtotal menos desconto) e a lista de itens, cada um com o resumo do procedimento.',
+  })
+  @ApiParam({
+    name: 'id',
+    format: 'uuid',
+    description: 'ID do pagamento',
+    example: '5ee40797-df04-4ea7-a579-fd9bf8436b7f',
+  })
+  @ApiOkResponse({
+    description: 'Pagamento encontrado',
+    type: PaymentResponseDto,
+  })
+  @ApiBadRequestResponse({ description: 'ID inválido (não é um UUID)' })
+  @ApiNotFoundResponse({ description: 'Pagamento não encontrado' })
+  findOne(@Param('id', ParseUUIDPipe) id: string): Promise<PaymentResponseDto> {
+    return this.service.findOne(id);
+  }
 }

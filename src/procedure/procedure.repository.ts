@@ -55,22 +55,30 @@ export class ProcedureRepository {
     return vet;
   }
 
-async findMany({ filters, page, limit }: FindProceduresParams) {
-  const where = this.buildWhere(filters);
 
-  const [items, total] = await this.prisma.$transaction([
-    this.prisma.procedure.findMany({
-      where,
-      skip: (page - 1) * limit,
-      take: limit,
-      orderBy: { dateTime: 'desc' },
+  findById(id: string): Promise<ProcedureWithNotes | null> {
+    return this.prisma.procedure.findUnique({
+      where: { id },
       include: procedureInclude,
-    }),
-    this.prisma.procedure.count({ where }),
-  ]);
+    });
+  }
 
-  return { items, total };
-}
+  async findMany({ filters, page, limit }: FindProceduresParams) {
+    const where = this.buildWhere(filters);
+
+    const [items, total] = await this.prisma.$transaction([
+      this.prisma.procedure.findMany({
+        where,
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: { dateTime: 'desc' },
+        include: procedureInclude,
+      }),
+      this.prisma.procedure.count({ where }),
+    ]);
+
+    return { items, total };
+  }
 
   private buildWhere(filters: FindProceduresFilters): Prisma.ProcedureWhereInput {
     const { type, petId, vetId, dateFrom, dateTo } = filters;

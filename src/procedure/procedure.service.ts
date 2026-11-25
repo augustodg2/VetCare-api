@@ -87,4 +87,17 @@ async list(
       excludeExtraneousValues: true,
     });
   }
+
+
+  async findOne(id: string): Promise<ProcedureResponseDto> {
+  const procedure = await this.repository.findById(id);
+
+  if (!procedure) {
+    throw new NotFoundException('Procedimento não encontrado');
+  }
+
+  return plainToInstance(ProcedureResponseDto, procedure, {
+    excludeExtraneousValues: true,
+  });
+}
 }
