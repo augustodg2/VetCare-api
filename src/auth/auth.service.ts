@@ -55,6 +55,7 @@ export class AuthService {
     return res;
   }
   async acceptInvite(acceptIviteDto: AcceptInviteDto, token: string){
+    console.log('ok')
     let payload: { sub: string, email: string, porpose: string };
 
     try {

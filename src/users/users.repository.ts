@@ -31,8 +31,15 @@ export class UsersRepository {
     return this.prisma.user.findMany();
   }
 
-  async findById(id: string) {
-    return this.prisma.user.findUnique({ where: { id: id } });
+  findById(id: string) {
+    return this.prisma.user.findUnique({ where: { id } });
+  }
+
+  updateInviteSentAt(id: string, inviteSentAt: Date) {
+    return this.prisma.user.update({
+      where: { id },
+      data: { inviteSentAt },
+    });
   }
 
   async update(id: string, data: Prisma.UserUpdateInput){

@@ -60,6 +60,7 @@ export class AuthController {
     @Body() acceptIviteDto: AcceptInviteDto,
     @Param('token') token: string,
   ) {
+    console.log("controller")
     return this.authService.acceptInvite(acceptIviteDto, token);
   }
 }

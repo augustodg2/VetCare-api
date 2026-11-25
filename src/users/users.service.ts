@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersRepository } from './users.repository';
@@ -72,12 +72,68 @@ export class UsersService {
     return plainToInstance(ResponseUserDto, user, {excludeExtraneousValues: true})
   }
 
+  async resendInvite(id: string) {
+    const user = await this.usersRepository.findById(id);
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    if (user.status !== UserStatus.PENDING_INVITE) {
+      throw new ConflictException(
+        'Só é possível reenviar convite para usuários com convite pendente',
+      );
+    }
+
+    const inviteToken = this.jwtService.sign({
+      sub: user.id,
+      email: user.email,
+      porpose: 'invite',
+    });
+
+    try {
+      await this.mailService.sendConfirmationEmail(user.email, inviteToken);
+    } catch {
+      throw new InternalServerErrorException('Falha ao enviar o e-mail de convite');
+    }
+
+    const updated = await this.usersRepository.updateInviteSentAt(
+      user.id,
+      new Date(),
+    );
+
+    return plainToInstance(ResponseUserByIdDto, updated, {
+      excludeExtraneousValues: true,
+    });
+  }
   async deactivate(id: string){
     if (!await this.usersRepository.findById(id)){
       throw new BadRequestException('Usuário não existe')
     }
     await this.usersRepository.update(id,{status: 'DEACTIVATED'})
   }
+
+  async reactivate(id: string) {
+    const user = await this.usersRepository.findById(id);
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    if (user.status !== UserStatus.DEACTIVATED) {
+      throw new ConflictException(
+        'Só é possível reativar usuários com status DEACTIVATED',
+      );
+    }
+
+    const updated = await this.usersRepository.update(id, {
+      status: UserStatus.ACTIVE,
+    });
+
+    return plainToInstance(ResponseUserByIdDto, updated, {
+      excludeExtraneousValues: true,
+    });
+}
 
   async refresh(id: string){
     const user = await this.usersRepository.findById(id)

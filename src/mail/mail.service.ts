@@ -52,7 +52,7 @@ export class MailService {
   }
 
   async sendConfirmationEmail(to: string, token: string) {
-    const link = `https://vetcare-aal.vercel.app/convite/${token}`;
+    const link = `${process.env.CLIENT_URL}/convite/${token}`;
 
     await this.sendMail({
       to,

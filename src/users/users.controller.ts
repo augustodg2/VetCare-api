@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, UseGuards, Query, HttpCode, HttpStatus, ParseUUIDPipe } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBadRequestResponse,
@@ -10,6 +10,8 @@ import {
   ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
+  ApiConflictResponse,
+  ApiInternalServerErrorResponse,
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -64,6 +66,37 @@ export class UsersController {
     return this.usersService.invite(inviteUserDto);
   }
 
+  //resend invite
+  @Post(':id/resend-invite')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard('jwt'), RolesGuard, StatusGuard)
+  @Roles('ADMIN')
+  @AllowedStatus('ACTIVE')
+  @ApiOperation({
+    summary: 'Reenviar convite',
+    description:
+      'Gera um novo token e reenvia o e-mail de convite para um usuário com status `PENDING_INVITE`. ' +
+      'Atualiza `inviteSentAt`. Restrito a administradores com status ativo.',
+  })
+  @ApiParam({
+    name: 'id',
+    format: 'uuid',
+    description: 'ID do usuário com convite pendente',
+  })
+  @ApiOkResponse({
+    description: 'Convite reenviado com sucesso',
+    type: ResponseUserByIdDto,
+  })
+  @ApiBadRequestResponse({ description: 'ID inválido (não é um UUID)' })
+  @ApiUnauthorizedResponse({ description: 'Token JWT ausente, inválido ou expirado' })
+  @ApiForbiddenResponse({ description: 'Acesso restrito a administradores ativos' })
+  @ApiNotFoundResponse({ description: 'Usuário não encontrado' })
+  @ApiConflictResponse({ description: 'O usuário não está com convite pendente' })
+  @ApiInternalServerErrorResponse({ description: 'Falha ao enviar o e-mail' })
+  resendInvite(@Param('id', ParseUUIDPipe) id: string) {
+    return this.usersService.resendInvite(id);
+  }
+
   //deactivate
   @ApiOperation({
     summary: 'Desativar usuário',
@@ -79,6 +112,37 @@ export class UsersController {
   @Post(':id/deactivate')
   deactivate(@Param('id') id: string) {
     return this.usersService.deactivate(id);
+  }
+
+  //reactivate
+  @Post(':id/reactivate')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard('jwt'), RolesGuard, StatusGuard)
+  @Roles('ADMIN')
+  @AllowedStatus('ACTIVE')
+  @ApiOperation({
+    summary: 'Reativar usuário',
+    description:
+      'Altera o status do usuário de `DEACTIVATED` para `ACTIVE`. ' +
+      'Não se aplica a usuários com convite pendente (use o reenvio de convite). ' +
+      'Restrito a administradores com status ativo.',
+  })
+  @ApiParam({
+    name: 'id',
+    format: 'uuid',
+    description: 'ID do usuário a ser reativado',
+  })
+  @ApiOkResponse({
+    description: 'Usuário reativado com sucesso',
+    type: ResponseUserByIdDto,
+  })
+  @ApiBadRequestResponse({ description: 'ID inválido (não é um UUID)' })
+  @ApiUnauthorizedResponse({ description: 'Token JWT ausente, inválido ou expirado' })
+  @ApiForbiddenResponse({ description: 'Acesso restrito a administradores ativos' })
+  @ApiNotFoundResponse({ description: 'Usuário não encontrado' })
+  @ApiConflictResponse({ description: 'O usuário não está com status DEACTIVATED' })
+  reactivate(@Param('id', ParseUUIDPipe) id: string) {
+    return this.usersService.reactivate(id);
   }
 
 
