@@ -12,6 +12,7 @@ import { PetOwnerModule } from './pet-owner/pet-owner.module';
 import { AppointmentModule } from './appointment/appointment.module';
 import { ProcedureModule } from './procedure/procedure.module';
 import { PaymentModule } from './payment/payment.module';
+import { PrescriptionModule } from './prescription/prescription.module';
 
 
 @Module({
@@ -27,7 +28,8 @@ import { PaymentModule } from './payment/payment.module';
     PetOwnerModule,
     AppointmentModule,
     ProcedureModule,
-    PaymentModule
+    PaymentModule,
+    PrescriptionModule
   ],
   controllers: [AppController],
   providers: [AppService],

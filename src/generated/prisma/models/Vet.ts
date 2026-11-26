@@ -193,6 +193,7 @@ export type VetWhereInput = {
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   appointments?: Prisma.AppointmentListRelationFilter
   procedures?: Prisma.ProcedureListRelationFilter
+  prescriptions?: Prisma.PrescriptionListRelationFilter
 }
 
 export type VetOrderByWithRelationInput = {
@@ -205,6 +206,7 @@ export type VetOrderByWithRelationInput = {
   user?: Prisma.UserOrderByWithRelationInput
   appointments?: Prisma.AppointmentOrderByRelationAggregateInput
   procedures?: Prisma.ProcedureOrderByRelationAggregateInput
+  prescriptions?: Prisma.PrescriptionOrderByRelationAggregateInput
 }
 
 export type VetWhereUniqueInput = Prisma.AtLeast<{
@@ -220,6 +222,7 @@ export type VetWhereUniqueInput = Prisma.AtLeast<{
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   appointments?: Prisma.AppointmentListRelationFilter
   procedures?: Prisma.ProcedureListRelationFilter
+  prescriptions?: Prisma.PrescriptionListRelationFilter
 }, "id" | "crmv" | "cpf" | "userId">
 
 export type VetOrderByWithAggregationInput = {
@@ -255,6 +258,7 @@ export type VetCreateInput = {
   user: Prisma.UserCreateNestedOneWithoutVetInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutVetInput
   procedures?: Prisma.ProcedureCreateNestedManyWithoutVetInput
+  prescriptions?: Prisma.PrescriptionCreateNestedManyWithoutVetInput
 }
 
 export type VetUncheckedCreateInput = {
@@ -266,6 +270,7 @@ export type VetUncheckedCreateInput = {
   userId: string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutVetInput
   procedures?: Prisma.ProcedureUncheckedCreateNestedManyWithoutVetInput
+  prescriptions?: Prisma.PrescriptionUncheckedCreateNestedManyWithoutVetInput
 }
 
 export type VetUpdateInput = {
@@ -277,6 +282,7 @@ export type VetUpdateInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutVetNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutVetNestedInput
   procedures?: Prisma.ProcedureUpdateManyWithoutVetNestedInput
+  prescriptions?: Prisma.PrescriptionUpdateManyWithoutVetNestedInput
 }
 
 export type VetUncheckedUpdateInput = {
@@ -288,6 +294,7 @@ export type VetUncheckedUpdateInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutVetNestedInput
   procedures?: Prisma.ProcedureUncheckedUpdateManyWithoutVetNestedInput
+  prescriptions?: Prisma.PrescriptionUncheckedUpdateManyWithoutVetNestedInput
 }
 
 export type VetCreateManyInput = {
@@ -413,6 +420,20 @@ export type VetUpdateOneRequiredWithoutProceduresNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.VetUpdateToOneWithWhereWithoutProceduresInput, Prisma.VetUpdateWithoutProceduresInput>, Prisma.VetUncheckedUpdateWithoutProceduresInput>
 }
 
+export type VetCreateNestedOneWithoutPrescriptionsInput = {
+  create?: Prisma.XOR<Prisma.VetCreateWithoutPrescriptionsInput, Prisma.VetUncheckedCreateWithoutPrescriptionsInput>
+  connectOrCreate?: Prisma.VetCreateOrConnectWithoutPrescriptionsInput
+  connect?: Prisma.VetWhereUniqueInput
+}
+
+export type VetUpdateOneRequiredWithoutPrescriptionsNestedInput = {
+  create?: Prisma.XOR<Prisma.VetCreateWithoutPrescriptionsInput, Prisma.VetUncheckedCreateWithoutPrescriptionsInput>
+  connectOrCreate?: Prisma.VetCreateOrConnectWithoutPrescriptionsInput
+  upsert?: Prisma.VetUpsertWithoutPrescriptionsInput
+  connect?: Prisma.VetWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.VetUpdateToOneWithWhereWithoutPrescriptionsInput, Prisma.VetUpdateWithoutPrescriptionsInput>, Prisma.VetUncheckedUpdateWithoutPrescriptionsInput>
+}
+
 export type VetCreateWithoutUserInput = {
   id?: string
   crmv: string
@@ -421,6 +442,7 @@ export type VetCreateWithoutUserInput = {
   deletedAt?: Date | string | null
   appointments?: Prisma.AppointmentCreateNestedManyWithoutVetInput
   procedures?: Prisma.ProcedureCreateNestedManyWithoutVetInput
+  prescriptions?: Prisma.PrescriptionCreateNestedManyWithoutVetInput
 }
 
 export type VetUncheckedCreateWithoutUserInput = {
@@ -431,6 +453,7 @@ export type VetUncheckedCreateWithoutUserInput = {
   deletedAt?: Date | string | null
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutVetInput
   procedures?: Prisma.ProcedureUncheckedCreateNestedManyWithoutVetInput
+  prescriptions?: Prisma.PrescriptionUncheckedCreateNestedManyWithoutVetInput
 }
 
 export type VetCreateOrConnectWithoutUserInput = {
@@ -457,6 +480,7 @@ export type VetUpdateWithoutUserInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   appointments?: Prisma.AppointmentUpdateManyWithoutVetNestedInput
   procedures?: Prisma.ProcedureUpdateManyWithoutVetNestedInput
+  prescriptions?: Prisma.PrescriptionUpdateManyWithoutVetNestedInput
 }
 
 export type VetUncheckedUpdateWithoutUserInput = {
@@ -467,6 +491,7 @@ export type VetUncheckedUpdateWithoutUserInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutVetNestedInput
   procedures?: Prisma.ProcedureUncheckedUpdateManyWithoutVetNestedInput
+  prescriptions?: Prisma.PrescriptionUncheckedUpdateManyWithoutVetNestedInput
 }
 
 export type VetCreateWithoutAppointmentsInput = {
@@ -477,6 +502,7 @@ export type VetCreateWithoutAppointmentsInput = {
   deletedAt?: Date | string | null
   user: Prisma.UserCreateNestedOneWithoutVetInput
   procedures?: Prisma.ProcedureCreateNestedManyWithoutVetInput
+  prescriptions?: Prisma.PrescriptionCreateNestedManyWithoutVetInput
 }
 
 export type VetUncheckedCreateWithoutAppointmentsInput = {
@@ -487,6 +513,7 @@ export type VetUncheckedCreateWithoutAppointmentsInput = {
   deletedAt?: Date | string | null
   userId: string
   procedures?: Prisma.ProcedureUncheckedCreateNestedManyWithoutVetInput
+  prescriptions?: Prisma.PrescriptionUncheckedCreateNestedManyWithoutVetInput
 }
 
 export type VetCreateOrConnectWithoutAppointmentsInput = {
@@ -513,6 +540,7 @@ export type VetUpdateWithoutAppointmentsInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutVetNestedInput
   procedures?: Prisma.ProcedureUpdateManyWithoutVetNestedInput
+  prescriptions?: Prisma.PrescriptionUpdateManyWithoutVetNestedInput
 }
 
 export type VetUncheckedUpdateWithoutAppointmentsInput = {
@@ -523,6 +551,7 @@ export type VetUncheckedUpdateWithoutAppointmentsInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   procedures?: Prisma.ProcedureUncheckedUpdateManyWithoutVetNestedInput
+  prescriptions?: Prisma.PrescriptionUncheckedUpdateManyWithoutVetNestedInput
 }
 
 export type VetCreateWithoutProceduresInput = {
@@ -533,6 +562,7 @@ export type VetCreateWithoutProceduresInput = {
   deletedAt?: Date | string | null
   user: Prisma.UserCreateNestedOneWithoutVetInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutVetInput
+  prescriptions?: Prisma.PrescriptionCreateNestedManyWithoutVetInput
 }
 
 export type VetUncheckedCreateWithoutProceduresInput = {
@@ -543,6 +573,7 @@ export type VetUncheckedCreateWithoutProceduresInput = {
   deletedAt?: Date | string | null
   userId: string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutVetInput
+  prescriptions?: Prisma.PrescriptionUncheckedCreateNestedManyWithoutVetInput
 }
 
 export type VetCreateOrConnectWithoutProceduresInput = {
@@ -569,6 +600,7 @@ export type VetUpdateWithoutProceduresInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutVetNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutVetNestedInput
+  prescriptions?: Prisma.PrescriptionUpdateManyWithoutVetNestedInput
 }
 
 export type VetUncheckedUpdateWithoutProceduresInput = {
@@ -579,6 +611,67 @@ export type VetUncheckedUpdateWithoutProceduresInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutVetNestedInput
+  prescriptions?: Prisma.PrescriptionUncheckedUpdateManyWithoutVetNestedInput
+}
+
+export type VetCreateWithoutPrescriptionsInput = {
+  id?: string
+  crmv: string
+  cpf: string
+  createdAt?: Date | string
+  deletedAt?: Date | string | null
+  user: Prisma.UserCreateNestedOneWithoutVetInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutVetInput
+  procedures?: Prisma.ProcedureCreateNestedManyWithoutVetInput
+}
+
+export type VetUncheckedCreateWithoutPrescriptionsInput = {
+  id?: string
+  crmv: string
+  cpf: string
+  createdAt?: Date | string
+  deletedAt?: Date | string | null
+  userId: string
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutVetInput
+  procedures?: Prisma.ProcedureUncheckedCreateNestedManyWithoutVetInput
+}
+
+export type VetCreateOrConnectWithoutPrescriptionsInput = {
+  where: Prisma.VetWhereUniqueInput
+  create: Prisma.XOR<Prisma.VetCreateWithoutPrescriptionsInput, Prisma.VetUncheckedCreateWithoutPrescriptionsInput>
+}
+
+export type VetUpsertWithoutPrescriptionsInput = {
+  update: Prisma.XOR<Prisma.VetUpdateWithoutPrescriptionsInput, Prisma.VetUncheckedUpdateWithoutPrescriptionsInput>
+  create: Prisma.XOR<Prisma.VetCreateWithoutPrescriptionsInput, Prisma.VetUncheckedCreateWithoutPrescriptionsInput>
+  where?: Prisma.VetWhereInput
+}
+
+export type VetUpdateToOneWithWhereWithoutPrescriptionsInput = {
+  where?: Prisma.VetWhereInput
+  data: Prisma.XOR<Prisma.VetUpdateWithoutPrescriptionsInput, Prisma.VetUncheckedUpdateWithoutPrescriptionsInput>
+}
+
+export type VetUpdateWithoutPrescriptionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  crmv?: Prisma.StringFieldUpdateOperationsInput | string
+  cpf?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  user?: Prisma.UserUpdateOneRequiredWithoutVetNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutVetNestedInput
+  procedures?: Prisma.ProcedureUpdateManyWithoutVetNestedInput
+}
+
+export type VetUncheckedUpdateWithoutPrescriptionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  crmv?: Prisma.StringFieldUpdateOperationsInput | string
+  cpf?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutVetNestedInput
+  procedures?: Prisma.ProcedureUncheckedUpdateManyWithoutVetNestedInput
 }
 
 
@@ -589,11 +682,13 @@ export type VetUncheckedUpdateWithoutProceduresInput = {
 export type VetCountOutputType = {
   appointments: number
   procedures: number
+  prescriptions: number
 }
 
 export type VetCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   appointments?: boolean | VetCountOutputTypeCountAppointmentsArgs
   procedures?: boolean | VetCountOutputTypeCountProceduresArgs
+  prescriptions?: boolean | VetCountOutputTypeCountPrescriptionsArgs
 }
 
 /**
@@ -620,6 +715,13 @@ export type VetCountOutputTypeCountProceduresArgs<ExtArgs extends runtime.Types.
   where?: Prisma.ProcedureWhereInput
 }
 
+/**
+ * VetCountOutputType without action
+ */
+export type VetCountOutputTypeCountPrescriptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PrescriptionWhereInput
+}
+
 
 export type VetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -631,6 +733,7 @@ export type VetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   appointments?: boolean | Prisma.Vet$appointmentsArgs<ExtArgs>
   procedures?: boolean | Prisma.Vet$proceduresArgs<ExtArgs>
+  prescriptions?: boolean | Prisma.Vet$prescriptionsArgs<ExtArgs>
   _count?: boolean | Prisma.VetCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["vet"]>
 
@@ -668,6 +771,7 @@ export type VetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   appointments?: boolean | Prisma.Vet$appointmentsArgs<ExtArgs>
   procedures?: boolean | Prisma.Vet$proceduresArgs<ExtArgs>
+  prescriptions?: boolean | Prisma.Vet$prescriptionsArgs<ExtArgs>
   _count?: boolean | Prisma.VetCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type VetIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -683,6 +787,7 @@ export type $VetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     user: Prisma.$UserPayload<ExtArgs>
     appointments: Prisma.$AppointmentPayload<ExtArgs>[]
     procedures: Prisma.$ProcedurePayload<ExtArgs>[]
+    prescriptions: Prisma.$PrescriptionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1088,6 +1193,7 @@ export interface Prisma__VetClient<T, Null = never, ExtArgs extends runtime.Type
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   appointments<T extends Prisma.Vet$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vet$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   procedures<T extends Prisma.Vet$proceduresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vet$proceduresArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProcedurePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  prescriptions<T extends Prisma.Vet$prescriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vet$prescriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrescriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1569,6 +1675,30 @@ export type Vet$proceduresArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.ProcedureScalarFieldEnum | Prisma.ProcedureScalarFieldEnum[]
+}
+
+/**
+ * Vet.prescriptions
+ */
+export type Vet$prescriptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Prescription
+   */
+  select?: Prisma.PrescriptionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Prescription
+   */
+  omit?: Prisma.PrescriptionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PrescriptionInclude<ExtArgs> | null
+  where?: Prisma.PrescriptionWhereInput
+  orderBy?: Prisma.PrescriptionOrderByWithRelationInput | Prisma.PrescriptionOrderByWithRelationInput[]
+  cursor?: Prisma.PrescriptionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PrescriptionScalarFieldEnum | Prisma.PrescriptionScalarFieldEnum[]
 }
 
 /**

@@ -56,6 +56,7 @@ model Vet {
   procedures   Procedure[]
 
   @@index([deletedAt])
+  prescriptions Prescription[]
 }
 
 model PetOwner {
@@ -90,6 +91,7 @@ model Pet {
   procedures   Procedure[]
 
   @@index([deletedAt])
+  prescriptions Prescription[]
 }
 
 enum AppointmentStatus {
@@ -190,4 +192,21 @@ model ItemPayment {
   @@unique([paymentId, procedureId])
   @@index([paymentId])
   @@index([procedureId])
+}
+
+
+model Prescription {
+  id        String   @id @default(uuid())
+  content   String   @db.Text 
+
+  vetId     String
+  vet       Vet      @relation(fields: [vetId], references: [id])
+
+  petId     String
+  pet       Pet      @relation(fields: [petId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([vetId])
+  @@index([petId])
 }

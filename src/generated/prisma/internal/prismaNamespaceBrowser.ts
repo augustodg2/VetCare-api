@@ -59,7 +59,8 @@ export const ModelName = {
   Procedure: 'Procedure',
   ProcedureNote: 'ProcedureNote',
   Payment: 'Payment',
-  ItemPayment: 'ItemPayment'
+  ItemPayment: 'ItemPayment',
+  Prescription: 'Prescription'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -195,6 +196,17 @@ export const ItemPaymentScalarFieldEnum = {
 } as const
 
 export type ItemPaymentScalarFieldEnum = (typeof ItemPaymentScalarFieldEnum)[keyof typeof ItemPaymentScalarFieldEnum]
+
+
+export const PrescriptionScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  vetId: 'vetId',
+  petId: 'petId',
+  createdAt: 'createdAt'
+} as const
+
+export type PrescriptionScalarFieldEnum = (typeof PrescriptionScalarFieldEnum)[keyof typeof PrescriptionScalarFieldEnum]
 
 
 export const SortOrder = {

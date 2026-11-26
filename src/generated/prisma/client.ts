@@ -84,3 +84,8 @@ export type Payment = Prisma.PaymentModel
  * 
  */
 export type ItemPayment = Prisma.ItemPaymentModel
+/**
+ * Model Prescription
+ * 
+ */
+export type Prescription = Prisma.PrescriptionModel
