@@ -1,5 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { Subject } from "rxjs";
 
 const MAILTRAP_SANDBOX_URL = "https://sandbox.api.mailtrap.io/api/send";
 
@@ -49,6 +50,29 @@ export class MailService {
       this.logger.error(`Falha ao enviar e-mail para ${to}`, error);
       throw error;
     }
+  }
+
+  async sendPasswordResetEmail(to: string, token: string) {
+    const link = `${process.env.CLIENT_URL}/convite/${token}`;
+
+    await this.sendMail({
+      to,
+      subject: 'Defina sua nova senha - VetCare',
+      html: `
+          <h2>Defina sua nova senha</h2>
+          <p>Um administrador solicitou o envio de uma nova senha para a sua conta.</p>
+          <p>Clique no botão abaixo para definir sua senha:</p>
+          <p>
+            <a href="${link}"
+              style="display:inline-block;padding:10px 20px;background:#2563eb;color:#fff;text-decoration:none;border-radius:6px">
+              Definir senha
+            </a>
+          </p>
+          <p>Ou copie este link: <br>${link}</p>
+          <p>Se você não esperava este e-mail, ignore-o.</p>
+        `,
+      text: `Defina sua nova senha acessando: ${link}.`,
+    });
   }
 
   async sendConfirmationEmail(to: string, token: string) {

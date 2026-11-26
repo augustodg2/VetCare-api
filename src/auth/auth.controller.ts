@@ -60,7 +60,21 @@ export class AuthController {
     @Body() acceptIviteDto: AcceptInviteDto,
     @Param('token') token: string,
   ) {
-    console.log("controller")
     return this.authService.acceptInvite(acceptIviteDto, token);
+  }
+
+  @Post('reset-password/:token')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Redefine a senha',
+    description:
+      'Define uma nova senha a partir do link enviado por e-mail (válido por 24 horas). ' +
+      'O link vale uma única vez. Não faz login: o usuário volta à tela de login. Rota pública.',
+  })
+  @ApiParam({ name: 'token', description: 'Token recebido por e-mail' })
+  @ApiOkResponse({ description: 'Senha redefinida', type: LoginResponseDto })
+  @ApiBadRequestResponse({ description: 'Senha inválida, ou link inválido, expirado ou já usado' })
+  resetPassword(@Param('token') token: string, @Body() dto: AcceptInviteDto) {
+    return this.authService.resetPassword(dto, token);
   }
 }

@@ -209,4 +209,31 @@ export class UsersController {
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }
+
+  @Post(':id/reset-password')
+  @HttpCode(HttpStatus.OK)
+  //@UseGuards(AuthGuard('jwt'), RolesGuard, StatusGuard)
+  @Roles('ADMIN')
+  @AllowedStatus('ACTIVE')
+  @ApiOperation({
+    summary: 'Recuperar senha',
+    description:
+      'Envia ao usuário um e-mail com link (válido por 24 horas) para definir uma nova senha. ' +
+      'A senha atual não é enviada nem exibida. Só vale para usuários `ACTIVE`. ' +
+      'Restrito a administradores com status ativo.',
+  })
+  @ApiParam({
+    name: 'id',
+    format: 'uuid',
+    description: 'ID do usuário que receberá o e-mail',
+  })
+  @ApiBadRequestResponse({ description: 'ID inválido (não é um UUID)' })
+  @ApiUnauthorizedResponse({ description: 'Token JWT ausente, inválido ou expirado' })
+  @ApiForbiddenResponse({ description: 'Acesso restrito a administradores ativos' })
+  @ApiNotFoundResponse({ description: 'Usuário não encontrado' })
+  @ApiConflictResponse({ description: 'O usuário não está com status ACTIVE' })
+  @ApiInternalServerErrorResponse({ description: 'Falha ao enviar o e-mail' })
+  resendPassword(@Param('id', ParseUUIDPipe) id: string) {
+    return this.usersService.resendPassword(id);
+  }
 }

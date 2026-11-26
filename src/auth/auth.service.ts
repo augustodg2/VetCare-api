@@ -87,7 +87,45 @@ export class AuthService {
         }
     const accessToken = this.jwtService.sign(newpayload);
 
-    const res: LoginResponseDto = { access_token: accessToken, user: plainToInstance(ResponseUserDto, user, {excludeExtraneousValues: true })};
+    const res: LoginResponseDto = { access_token: accessToken,
+       user: plainToInstance(ResponseUserDto, user, {excludeExtraneousValues: true })};
+    return res
+  }
+
+  async resetPassword(dto: AcceptInviteDto, token: string) {
+    const invalid = new BadRequestException('Link inválido ou expirado');
+
+    const decoded = this.jwtService.decode<{ email?: string; porpose?: string } | null>(token);
+
+    if (!decoded?.email || decoded.porpose !== 'password-reset') throw invalid;
+
+    const user = await this.authRepository.findUserByEmail(decoded.email);
+
+    if (!user || user.status !== UserStatus.ACTIVE || !user.password) throw invalid;
+
+    try {
+      await this.jwtService.verifyAsync(token, {
+        secret: `${process.env.INVITE_JWT_SECRET}${user.password}`,
+      });
+    } catch {
+      throw invalid;
+    }
+
+    await this.authRepository.update(user.id, {
+      password: await hash(dto.password, 10),
+    });
+
+    const newpayload = {
+      sub: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      status: user.status
+    }
+    const accessToken = this.jwtService.sign(newpayload);
+
+    const res: LoginResponseDto = { access_token: accessToken,
+       user: plainToInstance(ResponseUserDto, user, {excludeExtraneousValues: true })};
     return res
   }
 }

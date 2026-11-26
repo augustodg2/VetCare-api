@@ -195,4 +195,34 @@ export class UsersService {
     }
     return await this.usersRepository.delete(id);
   }
+
+  async resendPassword(id: string) {
+    const user = await this.usersRepository.findById(id);
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    if (user.status !== UserStatus.ACTIVE || !user.password) {
+      throw new ConflictException(
+        'Não é possível redefinir senha.',
+      );
+    }
+
+    const token = this.jwtService.sign(
+      { sub: user.id, email: user.email, porpose: 'password-reset' },
+      {
+        secret: `${process.env.INVITE_JWT_SECRET}${user.password}`,
+        expiresIn: '24h',
+      },
+    );
+
+    try {
+      await this.mailService.sendPasswordResetEmail(user.email, token);
+    } catch (error) {
+      throw new InternalServerErrorException('Falha ao enviar o e-mail');
+    }
+
+    return HttpStatus.OK;
+}
 }
