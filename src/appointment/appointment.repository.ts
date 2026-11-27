@@ -35,12 +35,17 @@ export class AppointmentRepository {
   from?: Date;
   to?: Date;
   vetId?: string;
+  petId?: string;
   status?: AppointmentStatus;
-  type?: ProcedureType
+  type?: ProcedureType;
+  order?: 'asc' | 'desc';
+  skip?: number;
+  take?: number;
   }) {
   const where: Prisma.AppointmentWhereInput = {
     dateTime: { gte: params.from, lt: params.to },
     ...(params.vetId && { vetId: params.vetId }),
+    ...(params.petId && { petId: params.petId }),
     ...(params.status && { status: params.status }),
     ...(params.type && { type: params.type})
   };
@@ -48,7 +53,9 @@ export class AppointmentRepository {
     return this.prisma.$transaction([
       this.prisma.appointment.findMany({
         where,
-        orderBy: { dateTime: 'asc' },
+        orderBy: { dateTime: params.order ?? 'asc' },
+        skip: params.skip,
+        take: params.take,
         select: {
           id: true,
           dateTime: true,
@@ -62,32 +69,6 @@ export class AppointmentRepository {
       }),
       this.prisma.appointment.count({ where }),
     ]);
-  }
-
-  async findByPet(petId: string, page: number, pageSize: number) {
-    const where: Prisma.AppointmentWhereInput = { petId };
-
-    const [data, total] = await this.prisma.$transaction([
-      this.prisma.appointment.findMany({
-        where,
-        orderBy: { dateTime: 'desc' },
-        skip: (page - 1) * pageSize,
-        take: pageSize,
-        select: {
-          id: true,
-          dateTime: true,
-          createdAt: true,
-          obs: true,
-          status: true,
-          type: true,
-          pet: { select: { id: true, name: true, species: true } },
-          vet: { select: { id: true, user: { select: { name: true } } } },
-        },
-      }),
-      this.prisma.appointment.count({ where }),
-    ]);
-
-    return { data, total, page, pageSize };
   }
 
   findPending(params: {

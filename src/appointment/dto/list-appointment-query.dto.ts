@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDate, IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
+import { IsDate, IsEnum, IsIn, IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
 import { AppointmentStatus, ProcedureType } from '../../generated/prisma/enums';
 
 export class ListAppointmentsQueryDto {
@@ -31,6 +31,14 @@ export class ListAppointmentsQueryDto {
   vetId?: string;
 
   @ApiPropertyOptional({
+    description: 'Filtrar por pet',
+    example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+  })
+  @IsOptional()
+  @IsString()
+  petId?: string;
+
+  @ApiPropertyOptional({
     description: 'Filtrar por status',
     enum: AppointmentStatus,
     enumName: 'AppointmentStatus',
@@ -48,4 +56,23 @@ export class ListAppointmentsQueryDto {
   @IsEnum(ProcedureType)
   type?: ProcedureType;
 
+  @ApiPropertyOptional({
+    description: 'Ordem por data e hora',
+    enum: ['asc', 'desc'],
+    default: 'asc',
+  })
+  @IsOptional()
+  @IsIn(['asc', 'desc'])
+  order: 'asc' | 'desc' = 'asc';
+
+  @ApiPropertyOptional({
+    description: 'Número da página (começa em 1). Sem `page`, a lista não é paginada.',
+    minimum: 1,
+    type: Number,
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  page?: number;
 }

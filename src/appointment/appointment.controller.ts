@@ -49,21 +49,21 @@ export class AppointmentController {
 
   //Listar appointment
   @ApiOperation({
-  summary: 'Listar agendamento por intervalo de data e hora',
+  summary: 'Listar agendamentos',
   description:
-    'Retorna as consultas entre `from` (inclusivo) e `to` (exclusivo), com filtros opcionais de veterinário e status.',
+    'Retorna as consultas entre `from` (inclusivo) e `to` (exclusivo), com filtros opcionais de veterinário, pet, status e tipo. O intervalo máximo é de 31 dias. Com `page`, a resposta é paginada (10 por página) e traz `page` e `pageSize`.',
   })
   @ApiOkResponse({
     description: 'Consultas retornadas com sucesso',
     type: [ResponseAppointmentDto],
   })
   @ApiBadRequestResponse({ description: 'Intervalo inválido' })
-  @ApiForbiddenResponse({ description: 'Usuário VET sem cadastro de veterinário ativo' })
+  @ApiNotFoundResponse({ description: 'Pet não encontrado' })
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles('ADMIN', 'RECEP', 'VET')
   @Get()
-  list(@Query() query: ListAppointmentsQueryDto, @CurrentUser() user: AuthenticatedUser) {
-    return this.appointmentService.list(query, user);
+  list(@Query() query: ListAppointmentsQueryDto) {
+    return this.appointmentService.list(query);
   }
 
 

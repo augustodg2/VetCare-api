@@ -5,18 +5,10 @@ import { UpdatePetDto } from './dto/update-pet.dto';
 import { PetRepository } from './pet.repository';
 import { plainToInstance } from 'class-transformer';
 import { ResponsePetDto } from './dto/response-pet.dto';
-import { AppointmentRepository } from '../appointment/appointment.repository';
-import { ResponseAppointmentDto } from '../appointment/dto/response-appointment.dto';
-import { ListPetAppointmentsQueryDto } from './dto/list-pet-appointments-query.dto';
-
-const APPOINTMENTS_PAGE_SIZE = 10;
 
 @Injectable()
 export class PetService {
-  constructor(
-    private readonly petRepository: PetRepository,
-    private readonly appointmentRepository: AppointmentRepository,
-  ) {}
+  constructor(private readonly petRepository: PetRepository) {}
 
 async list({ search, page }: ListPetsQueryDto) {
   const { data, ...pagination } = await this.petRepository.search(search, page);
@@ -41,30 +33,6 @@ async list({ search, page }: ListPetsQueryDto) {
     const pet = await this.petRepository.findById(id);
     if (!pet) throw new NotFoundException('Pet não encontrado');
     return pet;
-  }
-
-  async listAppointments(id: string, { page }: ListPetAppointmentsQueryDto) {
-    await this.findOne(id);
-
-    const { data, ...pagination } = await this.appointmentRepository.findByPet(
-      id,
-      page,
-      APPOINTMENTS_PAGE_SIZE,
-    );
-
-    return {
-      ...pagination,
-      data: data.map((appointment) =>
-        plainToInstance(
-          ResponseAppointmentDto,
-          {
-            ...appointment,
-            vet: { id: appointment.vet.id, name: appointment.vet.user.name },
-          },
-          { excludeExtraneousValues: true },
-        ),
-      ),
-    };
   }
 
   async update(id: string, dto: UpdatePetDto) {

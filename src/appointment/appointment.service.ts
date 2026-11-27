@@ -81,15 +81,7 @@ export class AppointmentService {
     );
   }
 
-  async list(query: ListAppointmentsQueryDto, user?: AuthenticatedUser) {
-    if (user?.role === 'VET') {
-      const vet = await this.vetsRepository.getByUserId(user.id);
-      if (!vet) {
-        throw new ForbiddenException('Cadastro de veterinário não encontrado para este usuário');
-      }
-      query.vetId = vet.id;
-    }
-
+  async list(query: ListAppointmentsQueryDto) {
     if (query.from >= query.to) {
       throw new BadRequestException('A data inicial deve ser anterior à data final');
     }
@@ -99,15 +91,28 @@ export class AppointmentService {
       throw new BadRequestException('O intervalo máximo permitido é de 31 dias');
     }
 
+    if (query.petId) {
+      const pet = await this.petsRepository.findById(query.petId);
+      if (!pet) throw new NotFoundException('Pet não encontrado');
+    }
+
+    const page = query.page;
     const [items, total] = await this.appointmentRepository.findByRange({
       from: query.from,
       to: query.to,
       vetId: query.vetId,
+      petId: query.petId,
       status: query.status,
-      type: query.type
+      type: query.type,
+      order: query.order,
+      ...(page && {
+        skip: (page - 1) * this.LIST_PAGE_SIZE,
+        take: this.LIST_PAGE_SIZE,
+      }),
     });
 
     return {
+      ...(page && { page, pageSize: this.LIST_PAGE_SIZE }),
       data: items.map((appointment) => plainToInstance(ResponseAppointmentDto,{
         ...appointment,
         vet: {
@@ -121,6 +126,7 @@ export class AppointmentService {
   }
 
 private readonly PENDING_THRESHOLD_MS = 2 * 60 * 60 * 1000; // 2 horas
+private readonly LIST_PAGE_SIZE = 10;
 
   async listPending(query: ListPendingAppointmentsQueryDto) {
     const take = 20;
