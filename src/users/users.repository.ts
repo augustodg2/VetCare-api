@@ -35,6 +35,13 @@ export class UsersRepository {
     return this.prisma.user.findUnique({ where: { id } });
   }
 
+  findByIdWithVet(id: string) {
+    return this.prisma.user.findUnique({
+      where: { id },
+      include: { vet: { select: { id: true, deletedAt: true } } },
+    });
+  }
+
   updateInviteSentAt(id: string, inviteSentAt: Date) {
     return this.prisma.user.update({
       where: { id },

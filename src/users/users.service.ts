@@ -12,6 +12,7 @@ import { AcceptInviteDto } from '../auth/dto/accept-invite.dto';
 import { ListUsersDto } from './dto/list-user.dto';
 import { MailService } from '../mail/mail.service';
 import { ResponseUserByIdDto } from './dto/response-user-byId.dto';
+import { ResponseMeDto } from './dto/response-me.dto';
 
   const PAGE_SIZE = 10
 @Injectable()
@@ -136,11 +137,12 @@ export class UsersService {
 }
 
   async refresh(id: string){
-    const user = await this.usersRepository.findById(id)
+    const user = await this.usersRepository.findByIdWithVet(id)
     if(!user){
       throw new ConflictException('usuário não existe')
     }
-    return plainToInstance(ResponseUserDto, user, {excludeExtraneousValues:true})
+    const vetId = user.vet && !user.vet.deletedAt ? user.vet.id : null
+    return plainToInstance(ResponseMeDto, { ...user, vetId }, {excludeExtraneousValues:true})
   }
 
   async findAll({ search, status, page }: ListUsersDto) {

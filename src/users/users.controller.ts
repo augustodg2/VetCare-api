@@ -26,6 +26,7 @@ import { CurrentUser } from '../auth/decorator/current-user.decorator';
 import { ListUsersDto } from './dto/list-user.dto';
 import { ResponseUserByIdDto } from './dto/response-user-byId.dto';
 import { ResponseUserDto } from './dto/response-user.dto';
+import { ResponseMeDto } from './dto/response-me.dto';
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -151,7 +152,7 @@ export class UsersController {
     summary: 'Obter usuário logado',
     description: 'Retorna os dados do usuário autenticado. Útil para restaurar a sessão no front-end.',
   })
-  @ApiOkResponse({ description: 'Dados do usuário autenticado', type: ResponseUserDto })
+  @ApiOkResponse({ description: 'Dados do usuário autenticado', type: ResponseMeDto })
   @ApiForbiddenResponse({ description: 'Usuário sem status ativo' })
   @UseGuards(AuthGuard('jwt'), StatusGuard)
   @AllowedStatus('ACTIVE')
