@@ -53,7 +53,7 @@ export class MailService {
   }
 
   async sendPasswordResetEmail(to: string, token: string) {
-    const link = `${process.env.CLIENT_URL}/convite/${token}`;
+    const link = `${process.env.CLIENT_URL}/redefinir-senha/${token}`;
 
     await this.sendMail({
       to,
