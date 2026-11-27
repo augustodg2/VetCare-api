@@ -233,11 +233,12 @@ private readonly LIST_PAGE_SIZE = 10;
     })
   }
 
-  async complete(id: string) {
+  async complete(id: string, user?: AuthenticatedUser) {
     const appointment = await this.appointmentRepository.findById(id);
     if (!appointment) {
       throw new NotFoundException('Consulta não encontrada');
     }
+    await this.assertCanManage(appointment, user);
 
     if (appointment.status === 'DONE') {
       throw new BadRequestException('A consulta já está concluída');

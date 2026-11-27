@@ -148,10 +148,10 @@ export class AppointmentController {
   })
   @ApiNotFoundResponse({ description: 'Consulta não encontrada' })
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN', 'RECEP')
+  @Roles('ADMIN', 'RECEP', 'VET')
   @Patch(':id/complete')
-  complete(@Param('id') id: string) {
-    return this.appointmentService.complete(id);
+  complete(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.appointmentService.complete(id, user);
   }
 
   @Get('all')
