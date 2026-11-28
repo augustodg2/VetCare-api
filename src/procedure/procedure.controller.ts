@@ -1,5 +1,5 @@
 // src/procedure/procedure.controller.ts
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, ParseUUIDPipe, Post, Query, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -16,9 +16,17 @@ import { ListProceduresQueryDto } from './dto/list-procedure-query.dto';
 import { ListProceduresResponseDto } from './dto/list-procedure-responser.dto';
 import { ExtraNoteDto, ExtraNoteResponseDto } from './dto/extra-note.dto';
 import { ProcedureResponseDto } from './dto/response-procedure.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../auth/guards/role.guard';
+import { StatusGuard } from '../auth/guards/status.guard';
+import { Roles } from '../auth/decorator/role.decorator';
+import { AllowedStatus } from '../auth/decorator/status.decorator';
 
 @ApiTags('Procedures')
 @ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'), RolesGuard, StatusGuard)
+@Roles('ADMIN', 'VET')
+@AllowedStatus('ACTIVE')
 @Controller('procedures')
 export class ProcedureController {
   constructor(private readonly procedureService: ProcedureService) {}

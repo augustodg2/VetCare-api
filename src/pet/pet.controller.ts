@@ -31,7 +31,7 @@ import { AllowedStatus } from '../auth/decorator/status.decorator';
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Token JWT ausente, inválido ou expirado' })
 @ApiForbiddenResponse({ description: 'Usuário sem permissão (falha no StatusGuard)' })
-//@UseGuards(AuthGuard('jwt'), StatusGuard)
+@UseGuards(AuthGuard('jwt'), StatusGuard)
 @AllowedStatus('ACTIVE')
 @Controller('pets')
 export class PetController {

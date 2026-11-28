@@ -1,5 +1,5 @@
 // src/prescription/prescription.controller.ts
-import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Query, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -17,6 +17,11 @@ import {
   PaginatedPrescriptionsResponseDto,
   PrescriptionResponseDto,
 } from './dto/prescription-response.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { StatusGuard } from '../auth/guards/status.guard';
+import { RolesGuard } from '../auth/guards/role.guard';
+import { Roles } from '../auth/decorator/role.decorator';
+import { AllowedStatus } from '../auth/decorator/status.decorator';
 
 const CREATE_PRESCRIPTION_EXAMPLE = {
   id: '770e8400-e29b-41d4-a716-446655440002',
@@ -37,6 +42,9 @@ const CREATE_PRESCRIPTION_EXAMPLE = {
   updatedAt: '2026-11-26T21:14:00.000Z',
 };
 
+@UseGuards(AuthGuard('jwt'), RolesGuard, StatusGuard)
+@Roles('ADMIN', 'VET')
+@AllowedStatus('ACTIVE')
 @ApiTags('Prescriptions')
 @ApiBearerAuth()
 @Controller('prescriptions')

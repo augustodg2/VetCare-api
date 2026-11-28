@@ -43,7 +43,7 @@ export class UsersController {
   @ApiCreatedResponse({ description: 'Usuário criado com sucesso' })
   @ApiBadRequestResponse({ description: 'Dados inválidos ou email já cadastrado' })
   @ApiForbiddenResponse({ description: 'Acesso restrito a administradores ativos' })
-  //@UseGuards(AuthGuard('jwt'), RolesGuard, StatusGuard)
+  @UseGuards(AuthGuard('jwt'), RolesGuard, StatusGuard)
   @Roles('ADMIN')
   @AllowedStatus('ACTIVE')
   @Post()
@@ -169,7 +169,7 @@ export class UsersController {
   })
   @ApiOkResponse({ description: 'Lista de usuários', type: [ResponseUserByIdDto] })
   @ApiForbiddenResponse({ description: 'Acesso restrito a administradores ativos' })
-  //@UseGuards(AuthGuard('jwt'), RolesGuard, StatusGuard)
+  @UseGuards(AuthGuard('jwt'), RolesGuard, StatusGuard)
   @Roles('ADMIN')
   @AllowedStatus('ACTIVE')
   @Get()
@@ -213,7 +213,7 @@ export class UsersController {
 
   @Post(':id/reset-password')
   @HttpCode(HttpStatus.OK)
-  //@UseGuards(AuthGuard('jwt'), RolesGuard, StatusGuard)
+  @UseGuards(AuthGuard('jwt'), RolesGuard, StatusGuard)
   @Roles('ADMIN')
   @AllowedStatus('ACTIVE')
   @ApiOperation({

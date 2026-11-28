@@ -1,5 +1,8 @@
 import {
   Controller, Get, Post, Body, Param, Delete, UseGuards, Query,
+  Patch,
+  ForbiddenException,
+  Req,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -12,6 +15,7 @@ import {
   ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
+  ApiBody,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { VetsService } from './vets.service';
@@ -20,11 +24,18 @@ import { ListVetsQueryDto } from './dto/listsVetsQuery.dto';
 import { ResponseVetsDto } from './dto/response-vets.dto';
 import { RolesGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorator/role.decorator';
+import { UpdateVetDto } from './dto/update-vet.dto';
+import { Role } from '../generated/prisma/enums';
+import { StatusGuard } from '../auth/guards/status.guard';
+import { AllowedStatus } from '../auth/decorator/status.decorator';
 
 @ApiTags('Vets')
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Token ausente ou inválido' })
 @ApiForbiddenResponse({ description: 'Acesso restrito a administradores' })
+@UseGuards(AuthGuard('jwt'), RolesGuard, StatusGuard)
+@Roles('ADMIN')
+@AllowedStatus('ACTIVE')
 @Controller('vets')
 export class VetsController {
   constructor(private readonly vetsService: VetsService) {}
@@ -41,8 +52,6 @@ export class VetsController {
   @ApiBadRequestResponse({
     description: 'Dados inválidos, usuário inexistente ou usuário sem role VET',
   })
-  //@UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN')
   @Post()
   create(@Body() createVetDto: CreateVetDto) {
     return this.vetsService.create(createVetDto);
@@ -58,13 +67,12 @@ export class VetsController {
     type: ResponseVetsDto,
     isArray: true,
   })
-  //@UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN', 'RECEP')
   @Get()
   lists(@Query() query: ListVetsQueryDto) {
     return this.vetsService.list(query);
   }
 
+  
   @ApiOperation({
     summary: 'Buscar veterinário por ID',
     description: 'Retorna os dados de um veterinário. Apenas ADMIN.',
@@ -79,23 +87,46 @@ export class VetsController {
     type: ResponseVetsDto,
   })
   @ApiNotFoundResponse({ description: 'Veterinário não encontrado' })
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN')
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.vetsService.findOne(id);
   }
 
-    /*@UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN', 'VET') 
+
+  @ApiOperation({
+    summary: 'Atualizar veterinário',
+    description:
+      'Atualiza parcialmente os dados de um veterinário. ' +
+      'ADMIN pode atualizar qualquer veterinário; VET só pode atualizar o próprio cadastro.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'ID do veterinário',
+    example: '3f2b8c1e-9a4d-4c7e-8f21-5b6a7d9e0c12',
+  })
+  @ApiBody({ type: UpdateVetDto })
+  @ApiOkResponse({
+    description: 'Veterinário atualizado com sucesso',
+    type: ResponseVetsDto,
+  })
+  @ApiBadRequestResponse({ description: 'Dados inválidos' })
+  @ApiNotFoundResponse({ description: 'Veterinário não encontrado' })
+  @ApiForbiddenResponse({
+    description: 'VET tentando atualizar o cadastro de outro veterinário',
+  })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateVetDto: UpdateVetDto, @Req() req: { user: { id: string }, role: Role }) {
+  update(
+    @Param('id') id: string,
+    @Body() updateVetDto: UpdateVetDto,
+    @Req() req: { user: { id: string }, role: Role },
+  ) {
     if (req.role == 'VET' && req.user.id !== id) {
       throw new ForbiddenException('Usuário sem permissão.');
-      }
+    }
 
     return this.vetsService.update(id, updateVetDto);
-  }*/
+  }
+
 
   @ApiOperation({
     summary: 'Remover veterinário',
@@ -108,8 +139,6 @@ export class VetsController {
   })
   @ApiOkResponse({ description: 'Veterinário removido com sucesso' })
   @ApiNotFoundResponse({ description: 'Veterinário não encontrado' })
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN')
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.vetsService.softDelete(id);

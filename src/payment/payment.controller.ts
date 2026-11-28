@@ -1,5 +1,5 @@
 // src/payment/payment.controller.ts
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, ParseUUIDPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
@@ -15,7 +15,16 @@ import { PaymentResponseDto } from './dto/payment-response.dto';
 import { PaymentService } from './payment.service';
 import { ListPaymentsResponseDto } from './dto/list-payments-response.dto';
 import { ListPaymentsQueryDto } from './dto/list-payment-query.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../auth/guards/role.guard';
+import { StatusGuard } from '../auth/guards/status.guard';
+import { Roles } from '../auth/decorator/role.decorator';
+import { AllowedStatus } from '../auth/decorator/status.decorator';
 
+
+@UseGuards(AuthGuard('jwt'), RolesGuard, StatusGuard)
+@Roles('ADMIN', 'RECEP')
+@AllowedStatus('ACTIVE')
 @ApiTags('Payments')
 @Controller('payments')
 export class PaymentController {
